@@ -82,6 +82,12 @@
     <Reference Include="MMQ, Version=1.0.15.0, Culture=neutral, PublicKeyToken=951c63ca832f7094, processorArchitecture=MSIL">
       <HintPath>..\..\packages\MMQ.1.0.15\lib\net45\MMQ.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=6.1.3.50, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AvalonEdit.6.1.3.50\lib\net45\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Ookii.Dialogs.Wpf, Version=1.0.0.0, Culture=neutral, PublicKeyToken=66aa232afad40158, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Ookii.Dialogs.Wpf.1.1.0\lib\net45\Ookii.Dialogs.Wpf.dll</HintPath>
     </Reference>
@@ -352,6 +358,10 @@
     <Compile Include="Ui\Menu\FileMenuViewModel.cs" />
     <Compile Include="Ui\DataSourceTree\FolderDataSourceViewModel.cs" />
     <Compile Include="Ui\SidePanel\HyperlinkRun.cs" />
+    <Compile Include="Ui\LogView\JsonDetailsFlyoutViewModel.cs" />
+    <Compile Include="Ui\LogView\JsonDetailsFlyoutControl.xaml.cs">
+      <DependentUpon>JsonDetailsFlyoutControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Ui\LogView\LogViewMainPanelViewModel.cs" />
     <Compile Include="Ui\DataSourceTree\DataSourceArrangeAdorner.cs" />
     <Compile Include="Ui\DataSourceTree\DataSourceDragAdorner.cs" />
@@ -488,6 +498,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Ui\About\AboutFlyoutDataTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Ui\LogView\JsonDetailsFlyoutControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Ui\LogView\JsonDetailsFlyoutDataTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

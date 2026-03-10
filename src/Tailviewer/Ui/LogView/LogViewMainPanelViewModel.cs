@@ -53,6 +53,7 @@ namespace Tailviewer.Ui.LogView
 		private readonly IApplicationSettings _applicationSettings;
 		private readonly GoToLineViewModel _goToLine;
 		private readonly QuickNavigationViewModel _quickNavigation;
+		private readonly NavigationService _navigationService;
 
 		private LogViewerViewModel _currentDataSourceLogView;
 		private string _windowTitle;
@@ -69,6 +70,7 @@ namespace Tailviewer.Ui.LogView
 		{
 			_applicationSettings = applicationSettings;
 			_actionCenter = actionCenter ?? throw new ArgumentNullException(nameof(actionCenter));
+			_navigationService = (NavigationService)services.Retrieve<INavigationService>();
 
 			_dataSources = new DataSourcesViewModel(applicationSettings, dataSources, _actionCenter);
 			_dataSources.PropertyChanged += DataSourcesOnPropertyChanged;
@@ -131,16 +133,19 @@ namespace Tailviewer.Ui.LogView
 			var viewModel = _dataSources.DataSources.FirstOrDefault(x => x.DataSource == dataSource);
 			if (viewModel != null)
 			{
-				Log.DebugFormat("Navigating to '{0}'", viewModel);
-				_dataSources.SelectedItem = viewModel;
+				CurrentDataSourceLogView = new LogViewerViewModel(
+					_dataSources.SelectedItem,
+					_actionCenter,
+					_applicationSettings);
+				CurrentDataSourceLogView.OnLogLineDoubleClicked += OnLogLineDoubleClicked;
 			}
 			else
 			{
-				Log.WarnFormat("Unable to navigate to data source '{0}': Can't find it!", dataSource);
-			}
+				CurrentDataSourceLogView = null;
 		}
+	}
 
-		private void OnFiltersChanged()
+	private void OnFiltersChanged()
 		{
 			var source = CurrentDataSource;
 			if (source != null)
@@ -384,25 +389,52 @@ namespace Tailviewer.Ui.LogView
 			}
 		}
 
-		private void OpenFile(IDataSourceViewModel dataSource)
-		{
-			if (CurrentDataSourceLogView?.DataSource == dataSource)
-				return;
+	private void OpenFile(IDataSourceViewModel dataSource)
+	{
+		if (CurrentDataSourceLogView?.DataSource == dataSource)
+			return;
 
-			if (dataSource != null)
-			{
-				CurrentDataSource = dataSource;
-				CurrentDataSourceLogView = new LogViewerViewModel(
-					dataSource,
-					_actionCenter,
-					_applicationSettings);
-			}
-			else
-			{
-				CurrentDataSource = null;
-				CurrentDataSourceLogView = null;
-			}
+		if (dataSource != null)
+		{
+			CurrentDataSource = dataSource;
+			CurrentDataSourceLogView = new LogViewerViewModel(
+				dataSource,
+				_actionCenter,
+				_applicationSettings);
+			CurrentDataSourceLogView.OnLogLineDoubleClicked += OnLogLineDoubleClicked;
 		}
+		else
+		{
+			CurrentDataSource = null;
+			CurrentDataSourceLogView = null;
+		}
+	}
+
+	private void OnLogLineDoubleClicked(IReadOnlyLogEntry entry)
+	{
+		try
+		{
+			if (_currentDataSourceLogView == null)
+			{
+				Log.WarnFormat("Cannot show JSON details flyout: no current data source log view");
+				return;
+			}
+
+			var logSource = _currentDataSourceLogView.LogSource;
+			if (logSource == null)
+			{
+				Log.WarnFormat("Cannot show JSON details flyout: no log source available");
+				return;
+			}
+
+			var flyout = new JsonDetailsFlyoutViewModel(logSource, entry);
+			_navigationService.ShowFlyout(flyout);
+		}
+		catch (Exception e)
+		{
+			Log.ErrorFormat("Failed to show JSON details flyout: {0}", e);
+		}
+	}
 
 		public LogViewerViewModel CurrentDataSourceLogView
 		{

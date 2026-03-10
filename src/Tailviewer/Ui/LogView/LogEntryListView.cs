@@ -186,6 +186,7 @@ namespace Tailviewer.Ui.LogView
 			PartTextCanvas.RequestBringIntoView += TextCanvasOnRequestBringIntoView;
 			PartTextCanvas.VisibleSectionChanged += TextCanvasOnVisibleSectionChanged;
 			PartTextCanvas.OnSelectionChanged += TextCanvasOnOnSelectionChanged;
+			PartTextCanvas.LogLineDoubleClicked += TextCanvasOnLogLineDoubleClicked;
 
 			ChangeTextSettings(textSettings, textBrushes);
 
@@ -550,6 +551,8 @@ namespace Tailviewer.Ui.LogView
 
 		public event Action<IEnumerable<LogLineIndex>> SelectionChanged;
 
+		public event Action<IReadOnlyLogEntry> LogLineDoubleClicked;
+
 		private void TextCanvasOnRequestBringIntoView(LogLineIndex logLineIndex, LogLineMatch match)
 		{
 			BringIntoView(logLineIndex, match);
@@ -635,6 +638,12 @@ namespace Tailviewer.Ui.LogView
 			if (_verticalScrollBar.Value >= _verticalScrollBar.Maximum)
 				FollowTail = true;
 		}
+
+		private void TextCanvasOnLogLineDoubleClicked(IReadOnlyLogEntry entry)
+		{
+			LogLineDoubleClicked?.Invoke(entry);
+		}
+
 
 		private static void OnSettingsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{

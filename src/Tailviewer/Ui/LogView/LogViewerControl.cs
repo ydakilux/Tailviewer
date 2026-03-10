@@ -109,14 +109,15 @@ namespace Tailviewer.Ui.LogView
 
 		private bool _changingLogView;
 
-		public LogViewerControl()
-		{
-			InitializeComponent();
+	public LogViewerControl()
+	{
+		InitializeComponent();
 
-			PART_ListView.SelectionChanged += PartListViewOnSelectionChanged;
-			PART_ListView.FollowTailChanged += OnFollowTailChanged;
-			PART_ListView.HorizontalScrollBar.ValueChanged += HorizontalScrollBarOnValueChanged;
-		}
+		PART_ListView.SelectionChanged += PartListViewOnSelectionChanged;
+		PART_ListView.FollowTailChanged += OnFollowTailChanged;
+		PART_ListView.HorizontalScrollBar.ValueChanged += HorizontalScrollBarOnValueChanged;
+		PART_ListView.LogLineDoubleClicked += PartListViewOnLogLineDoubleClicked;
+	}
 
 		public DataSourceDisplayMode MergedDataSourceDisplayMode
 		{
@@ -268,14 +269,21 @@ namespace Tailviewer.Ui.LogView
 			PART_ListView.SetHorizontalOffset(horizontalOffset);
 		}
 
-		private void PartListViewOnSelectionChanged(IEnumerable<LogLineIndex> logLineIndices)
-		{
-			var dataSource = DataSource;
-			if (dataSource != null)
-				dataSource.SelectedLogLines = new HashSet<LogLineIndex>(logLineIndices);
-		}
+	private void PartListViewOnSelectionChanged(IEnumerable<LogLineIndex> logLineIndices)
+	{
+		var dataSource = DataSource;
+		if (dataSource != null)
+			dataSource.SelectedLogLines = new HashSet<LogLineIndex>(logLineIndices);
+	}
 
-		private static void OnLogViewChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+	private void PartListViewOnLogLineDoubleClicked(IReadOnlyLogEntry entry)
+	{
+		var logView = LogView;
+		if (logView != null)
+			logView.RaiseLogLineDoubleClicked(entry);
+	}
+
+	private static void OnLogViewChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
 		{
 			((LogViewerControl) dependencyObject).OnLogViewChanged((LogViewerViewModel) args.OldValue,
 				(LogViewerViewModel) args.NewValue);

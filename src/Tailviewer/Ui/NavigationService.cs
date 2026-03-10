@@ -1,4 +1,4 @@
-﻿using Tailviewer.Api;
+using Tailviewer.Api;
 using Tailviewer.Ui.LogView;
 
 namespace Tailviewer.Ui
@@ -34,5 +34,18 @@ namespace Tailviewer.Ui
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Shows a flyout in the main window.
+		/// </summary>
+		/// <param name="flyout">The flyout view model to display</param>
+		public void ShowFlyout(IFlyoutViewModel flyout)
+		{
+			if (MainWindow != null)
+			{
+				MainWindow.CurrentFlyout = flyout;
+			}
+		}
 	}
 }
+

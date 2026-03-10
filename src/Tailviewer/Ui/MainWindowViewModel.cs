@@ -86,12 +86,14 @@ namespace Tailviewer.Ui
 			                                              quickFilters,
 			                                              services.Retrieve<IHighlighters>(),
 			                                              applicationSettings);
-			WindowTitle = _logViewPanel.WindowTitle;
-			WindowTitleSuffix = _logViewPanel.WindowTitleSuffix;
+		WindowTitle = _logViewPanel.WindowTitle;
+		WindowTitleSuffix = _logViewPanel.WindowTitleSuffix;
 
-			((NavigationService) services.Retrieve<INavigationService>()).LogViewer = _logViewPanel;
+		var navigationService = (NavigationService) services.Retrieve<INavigationService>();
+		navigationService.LogViewer = _logViewPanel;
+		navigationService.MainWindow = this;
 
-			_logViewPanel.PropertyChanged += LogViewPanelOnPropertyChanged;
+		_logViewPanel.PropertyChanged += LogViewPanelOnPropertyChanged;
 
 			var timer = new DispatcherTimer
 			{

@@ -37,9 +37,14 @@ namespace Tailviewer.Ui.LogView
 		private string _noEntriesAction;
 		private Geometry _noEntriesIcon;
 		private int _totalLogEntryCount;
-		private ILogSourceSearch _search;
+	private ILogSourceSearch _search;
 
-		public LogViewerViewModel(IDataSourceViewModel dataSource,
+	/// <summary>
+	/// Event raised when a log line is double-clicked.
+	/// </summary>
+	public event Action<IReadOnlyLogEntry> OnLogLineDoubleClicked;
+
+	public LogViewerViewModel(IDataSourceViewModel dataSource,
 		                          IActionCenter actionCenter,
 		                          IApplicationSettings applicationSettings,
 		                          TimeSpan maximumWaitTime)
@@ -323,9 +328,18 @@ namespace Tailviewer.Ui.LogView
 			}
 			else
 			{
-				NoEntriesExplanation = null;
-				NoEntriesAction = null;
-			}
+			NoEntriesExplanation = null;
+			NoEntriesAction = null;
 		}
 	}
+
+	/// <summary>
+	/// Raises the OnLogLineDoubleClicked event.
+	/// </summary>
+	/// <param name="entry">The log entry that was double-clicked</param>
+	internal void RaiseLogLineDoubleClicked(IReadOnlyLogEntry entry)
+	{
+		OnLogLineDoubleClicked?.Invoke(entry);
+	}
+}
 }

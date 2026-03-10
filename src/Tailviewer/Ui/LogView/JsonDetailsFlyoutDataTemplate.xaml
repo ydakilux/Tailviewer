@@ -1,0 +1,9 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:logView="clr-namespace:Tailviewer.Ui.LogView">
+
+	<DataTemplate DataType="{x:Type logView:JsonDetailsFlyoutViewModel}">
+		<logView:JsonDetailsFlyoutControl />
+	</DataTemplate>
+
+</ResourceDictionary>

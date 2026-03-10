@@ -721,7 +721,12 @@ namespace Tailviewer.Ui.LogView
 			}
 		}
 
-		#region Mouse Events
+	/// <summary>
+	/// Invoked when the user double-clicks on a log line.
+	/// </summary>
+	public event Action<IReadOnlyLogEntry> LogLineDoubleClicked;
+
+	#region Mouse Events
 
 		protected override void OnMouseMove(MouseEventArgs e)
 		{
@@ -762,9 +767,21 @@ namespace Tailviewer.Ui.LogView
 
 		protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
 		{
+			Log.DebugFormat("OnMouseLeftButtonDown: ClickCount={0}, _hoveredIndices.Count={1}, ButtonState={2}", 
+				e.ClickCount, _hoveredIndices.Count, e.ButtonState);
+			
 			if (_hoveredIndices.Count > 0)
 			{
 				LogLineIndex index = _hoveredIndices.First();
+
+				// Check for double-click - need ClickCount == 2 AND ButtonState == Pressed
+				if (e.ClickCount == 2 && e.ButtonState == System.Windows.Input.MouseButtonState.Pressed)
+				{
+					Log.DebugFormat("Double-click detected on line {0}", index);
+					OnMouseDoubleClick(index);
+					e.Handled = true; // Mark event as handled to prevent further processing
+					return;
+				}
 
 				SelectMode selectMode = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)
 					                        ? SelectMode.Add
@@ -783,6 +800,35 @@ namespace Tailviewer.Ui.LogView
 
 			Focus();
 			base.OnMouseLeftButtonDown(e);
+		}
+
+		private void OnMouseDoubleClick(LogLineIndex index)
+		{
+			Log.DebugFormat("OnMouseDoubleClick called for line {0}, _logSource is {1}", index, _logSource != null ? "not null" : "null");
+			
+			if (_logSource != null)
+			{
+				try
+				{
+					// Fetch the log entry for the double-clicked line
+					// Request only the columns that are commonly available
+					var buffer = new LogBufferArray(1, Columns.Index, Columns.RawContent);
+					_logSource.GetEntries(new[] { index }, buffer);
+					
+					Log.DebugFormat("Buffer count: {0}", buffer.Count);
+					
+					if (buffer.Count > 0)
+					{
+						IReadOnlyLogEntry entry = buffer[0];
+						Log.DebugFormat("Invoking LogLineDoubleClicked event");
+						LogLineDoubleClicked?.Invoke(entry);
+					}
+				}
+				catch (Exception ex)
+				{
+					Log.ErrorFormat("Error retrieving log entry for double-click: {0}", ex);
+				}
+			}
 		}
 
 		private bool SetSelected(LogLineIndex from, LogLineIndex to, SelectMode selectMode)
