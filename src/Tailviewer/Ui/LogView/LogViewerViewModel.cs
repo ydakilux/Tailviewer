@@ -228,6 +228,18 @@ namespace Tailviewer.Ui.LogView
 			_actionCenter.Add(action);
 		}
 
+		/// <summary>
+		///     Called when the user copies log lines to the clipboard as rich text (RTF/HTML).
+		///     Shows a one-time hint in the action center explaining that Word requires
+		///     "Keep Source Formatting" (or "Paste Special") to preserve colors.
+		/// </summary>
+		public void OnRichCopyHint()
+		{
+			_actionCenter.Add(Notification.CreateInfo(
+				"Copied to clipboard",
+				"Colors are preserved in the clipboard. To keep them, paste using \"Keep Source Formatting\" (in Word: Ctrl+Alt+V → Keep Source Formatting, or click the paste icon and choose \"Keep Source Formatting\")."));
+		}
+
 		public void OnLogFileModified(ILogSource logSource, LogSourceModification modification)
 		{
 			lock (_pendingSections)

@@ -192,6 +192,7 @@ namespace Tailviewer.Ui.LogView
 			PartTextCanvas.VisibleSectionChanged += TextCanvasOnVisibleSectionChanged;
 			PartTextCanvas.OnSelectionChanged += TextCanvasOnOnSelectionChanged;
 			PartTextCanvas.LogLineDoubleClicked += TextCanvasOnLogLineDoubleClicked;
+			PartTextCanvas.RichCopyHint += TextCanvasOnRichCopyHint;
 
 			ChangeTextSettings(textSettings, textBrushes);
 
@@ -574,6 +575,8 @@ namespace Tailviewer.Ui.LogView
 
 		public event Action<IReadOnlyLogEntry> LogLineDoubleClicked;
 
+		public event Action RichCopyHint;
+
 		private void TextCanvasOnRequestBringIntoView(LogLineIndex logLineIndex, LogLineMatch match)
 		{
 			BringIntoView(logLineIndex, match);
@@ -663,6 +666,11 @@ namespace Tailviewer.Ui.LogView
 		private void TextCanvasOnLogLineDoubleClicked(IReadOnlyLogEntry entry)
 		{
 			LogLineDoubleClicked?.Invoke(entry);
+		}
+
+		private void TextCanvasOnRichCopyHint()
+		{
+			RichCopyHint?.Invoke();
 		}
 
 

@@ -122,6 +122,7 @@ namespace Tailviewer.Ui.LogView
 		PART_ListView.FollowTailChanged += OnFollowTailChanged;
 		PART_ListView.HorizontalScrollBar.ValueChanged += HorizontalScrollBarOnValueChanged;
 		PART_ListView.LogLineDoubleClicked += PartListViewOnLogLineDoubleClicked;
+		PART_ListView.RichCopyHint += PartListViewOnRichCopyHint;
 	}
 
 		public DataSourceDisplayMode MergedDataSourceDisplayMode
@@ -292,6 +293,13 @@ namespace Tailviewer.Ui.LogView
 		var logView = LogView;
 		if (logView != null)
 			logView.RaiseLogLineDoubleClicked(entry);
+	}
+
+	private void PartListViewOnRichCopyHint()
+	{
+		var logView = LogView;
+		if (logView != null)
+			logView.OnRichCopyHint();
 	}
 
 	private static void OnLogViewChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)

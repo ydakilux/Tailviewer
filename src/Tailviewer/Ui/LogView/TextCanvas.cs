@@ -703,38 +703,80 @@ namespace Tailviewer.Ui.LogView
 
 		public new event Action<LogLineIndex, LogLineMatch> RequestBringIntoView;
 
-		public void OnCopyToClipboard()
+	public void OnCopyToClipboard()
+	{
+		try
 		{
-			try
-			{
-				var builder = new StringBuilder();
-				ILogSource logSource = _logSource;
-				if (logSource != null)
-				{
-					var sortedIndices = new List<LogLineIndex>(_selectedIndices);
-					sortedIndices.Sort();
-					// TODO: What do we do if some mad man has 1 million lines selected?
-					// TODO: Request in batches
-					var buffer = new LogBufferArray(_selectedIndices.Count, Columns.RawContent);
-					logSource.GetEntries(sortedIndices, buffer);
+			ILogSource logSource = _logSource;
+			if (logSource == null)
+				return;
 
-					for (int i = 0; i < sortedIndices.Count; ++i)
-					{
-						var entry = buffer[i];
-						if (i < sortedIndices.Count - 1)
-							builder.AppendLine(entry.RawContent);
-						else
-							builder.Append(entry.RawContent);
-					}
-				}
-				string message = builder.ToString();
-				Clipboard.SetText(message);
-			}
-			catch (Exception e)
+			var sortedIndices = new List<LogLineIndex>(_selectedIndices);
+			sortedIndices.Sort();
+
+			// Fetch raw entries
+			var buffer = new LogBufferArray(_selectedIndices.Count,
+				Columns.Index, Columns.LogEntryIndex, PageBufferedLogSource.RetrievalState,
+				Columns.LogLevel, Columns.RawContent);
+			logSource.GetEntries(sortedIndices, buffer);
+
+			// Build TextLine objects with highlight filters so segments carry color info
+			var emptyHovered = new HashSet<LogLineIndex>();
+			var emptySelected = new HashSet<LogLineIndex>();
+			var textLines = new List<TextLine>(sortedIndices.Count);
+			for (int i = 0; i < sortedIndices.Count; ++i)
 			{
-				Log.ErrorFormat("Caught unexpected exception: {0}", e);
+				var line = new TextLine(buffer[i], emptyHovered, emptySelected,
+					_colorByLevel, _textSettings, _textBrushes)
+				{
+					IsFocused = false,
+					HighlightFilters = _highlightFilters
+				};
+				textLines.Add(line);
 			}
+
+			// Extract colored spans and build plain text simultaneously
+			var coloredLines = RichClipboardHelper.ExtractLines(textLines);
+
+			// Plain text (always provided as fallback)
+			var plainText = new StringBuilder();
+			for (int i = 0; i < coloredLines.Count; i++)
+			{
+				foreach (var span in coloredLines[i].Spans)
+					plainText.Append(span.Text);
+				if (i < coloredLines.Count - 1)
+					plainText.AppendLine();
+			}
+
+			string rtf  = RichClipboardHelper.BuildRtf(coloredLines);
+			string html = RichClipboardHelper.BuildHtml(coloredLines);
+
+			// RTF must be placed on the clipboard as a raw ANSI byte stream, not a .NET string.
+			// WPF's DataObject.SetData(DataFormats.Rtf, string) has a known encoding bug: it
+			// serialises the string as UTF-16, which Word's RTF parser cannot read (RTF is 7-bit
+			// ASCII/ANSI). Passing a MemoryStream bypasses WPF's encoding and gives Windows the
+			// raw bytes, exactly as Word expects.
+			System.IO.MemoryStream rtfStream = RichClipboardHelper.BuildRtfStream(coloredLines);
+
+			var dataObject = new DataObject();
+			dataObject.SetData(DataFormats.Rtf,         rtfStream);
+			dataObject.SetData(DataFormats.Html,        html);
+			dataObject.SetData(DataFormats.UnicodeText, plainText.ToString());
+			dataObject.SetData(DataFormats.Text,        plainText.ToString());
+		Clipboard.SetDataObject(dataObject, copy: true);
+			RichCopyHint?.Invoke();
 		}
+		catch (Exception e)
+		{
+			Log.ErrorFormat("Caught unexpected exception: {0}", e);
+		}
+	}
+
+	/// <summary>
+	///     Fired after a rich (RTF/HTML) copy-to-clipboard so the UI can inform the user
+	///     that "Keep Source Formatting" is needed when pasting into Word.
+	/// </summary>
+	public event Action RichCopyHint;
 
 	/// <summary>
 	/// Invoked when the user double-clicks on a log line.
