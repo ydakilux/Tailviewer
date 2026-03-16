@@ -34,13 +34,31 @@ namespace Tailviewer.BusinessLogic.Filters
 			set { _settings.IsInverted = value; }
 		}
 
-		public FilterMatchType MatchType
-		{
-			get { return _settings.MatchType; }
-			set { _settings.MatchType = value; }
-		}
+	public FilterMatchType MatchType
+	{
+		get { return _settings.MatchType; }
+		set { _settings.MatchType = value; }
+	}
 
-		public QuickFilterId Id => _settings.Id;
+	public System.Windows.Media.Color? HighlightColor
+	{
+		get { return _settings.HighlightColor; }
+		set { _settings.HighlightColor = value; }
+	}
+
+	public System.Windows.Media.Color? ForegroundColor
+	{
+		get { return _settings.ForegroundColor; }
+		set { _settings.ForegroundColor = value; }
+	}
+
+	public bool IsHighlightOnly
+	{
+		get { return _settings.IsHighlightOnly; }
+		set { _settings.IsHighlightOnly = value; }
+	}
+
+	public QuickFilterId Id => _settings.Id;
 
 		[Pure]
 		public ILogEntryFilter CreateFilter()

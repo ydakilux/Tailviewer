@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using log4net;
 using Metrolib;
 using Tailviewer.Api;
 using Tailviewer.BusinessLogic.DataSources;
@@ -19,6 +21,8 @@ namespace Tailviewer.Ui.QuickFilter
 	public sealed class QuickFilterViewModel
 		: INotifyPropertyChanged
 	{
+		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
 		private readonly BusinessLogic.Filters.QuickFilter _quickFilter;
 		private IDataSource _currentDataSource;
 		private bool _isEditing;
@@ -162,9 +166,51 @@ namespace Tailviewer.Ui.QuickFilter
 			}
 		}
 
-		public QuickFilterId Id => _quickFilter.Id;
+	public QuickFilterId Id => _quickFilter.Id;
 
-		public event PropertyChangedEventHandler PropertyChanged;
+	public System.Windows.Media.Color? HighlightColor
+	{
+		get { return _quickFilter.HighlightColor; }
+		set
+		{
+			if (value == HighlightColor)
+				return;
+
+			_quickFilter.HighlightColor = value;
+			EmitPropertyChanged();
+			EmitPropertyChanged(nameof(HasHighlightColor));
+		}
+	}
+
+	public System.Windows.Media.Color? ForegroundColor
+	{
+		get { return _quickFilter.ForegroundColor; }
+		set
+		{
+			if (value == ForegroundColor)
+				return;
+
+			_quickFilter.ForegroundColor = value;
+			EmitPropertyChanged();
+		}
+	}
+
+	public bool HasHighlightColor => HighlightColor.HasValue;
+
+	public bool IsHighlightOnly
+	{
+		get { return _quickFilter.IsHighlightOnly; }
+		set
+		{
+			if (value == IsHighlightOnly)
+				return;
+
+			_quickFilter.IsHighlightOnly = value;
+			EmitPropertyChanged();
+		}
+	}
+
+	public event PropertyChangedEventHandler PropertyChanged;
 
 		private void UpdateValidity()
 		{

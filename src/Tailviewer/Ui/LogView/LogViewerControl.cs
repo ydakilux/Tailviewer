@@ -7,6 +7,7 @@ using Tailviewer.Api;
 using Tailviewer.BusinessLogic.Searches;
 using Tailviewer.Settings;
 using Tailviewer.Ui.DataSourceTree;
+using Tailviewer.Ui.QuickFilter;
 
 namespace Tailviewer.Ui.LogView
 {
@@ -23,11 +24,15 @@ namespace Tailviewer.Ui.LogView
 		public static readonly DependencyProperty FindAllProperty = DependencyProperty.Register(
 		                                                "FindAll", typeof(IFindAllViewModel), typeof(LogViewerControl), new PropertyMetadata(default(IFindAllViewModel)));
 
-		public static readonly DependencyProperty SearchProperty =
-			DependencyProperty.Register("Search", typeof(ILogSourceSearch), typeof(LogViewerControl),
-				new PropertyMetadata(default(ILogSourceSearch)));
+	public static readonly DependencyProperty SearchProperty =
+		DependencyProperty.Register("Search", typeof(ILogSourceSearch), typeof(LogViewerControl),
+			new PropertyMetadata(default(ILogSourceSearch)));
 
-		public static readonly DependencyProperty DataSourceProperty =
+	public static readonly DependencyProperty HighlightFiltersProperty =
+		DependencyProperty.Register("HighlightFilters", typeof(List<HighlightFilter>), typeof(LogViewerControl),
+		new PropertyMetadata(default(List<HighlightFilter>)));
+
+	public static readonly DependencyProperty DataSourceProperty =
 			DependencyProperty.Register("DataSource", typeof(IDataSourceViewModel), typeof(LogViewerControl),
 				new PropertyMetadata(defaultValue: null, propertyChangedCallback: OnDataSourceChanged));
 
@@ -149,13 +154,19 @@ namespace Tailviewer.Ui.LogView
 			set { SetValue(FindAllProperty, value); }
 		}
 
-		public ILogSourceSearch Search
-		{
-			get { return (ILogSourceSearch) GetValue(SearchProperty); }
-			set { SetValue(SearchProperty, value); }
-		}
+	public ILogSourceSearch Search
+	{
+		get { return (ILogSourceSearch) GetValue(SearchProperty); }
+		set { SetValue(SearchProperty, value); }
+	}
 
-		public Geometry ErrorIcon
+	public List<HighlightFilter> HighlightFilters
+	{
+		get { return (List<HighlightFilter>)GetValue(HighlightFiltersProperty); }
+		set { SetValue(HighlightFiltersProperty, value); }
+	}
+
+	public Geometry ErrorIcon
 		{
 			get { return (Geometry) GetValue(ErrorMessageActionProperty); }
 			set { SetValue(ErrorMessageActionProperty, value); }
@@ -306,6 +317,7 @@ namespace Tailviewer.Ui.LogView
 					FindAll = newView.DataSource.FindAll;
 					Search = newView.Search;
 					CurrentLogLine = newView.DataSource.VisibleLogLine;
+					HighlightFilters = newView.HighlightFilters;
 
 					Select(newView.DataSource.SelectedLogLines);
 					SetHorizontalOffset(newView.DataSource.HorizontalOffset);
@@ -315,6 +327,7 @@ namespace Tailviewer.Ui.LogView
 					DataSource = null;
 					LogSource = null;
 					FindAll = null;
+					HighlightFilters = null;
 				}
 			}
 			finally
@@ -370,6 +383,10 @@ namespace Tailviewer.Ui.LogView
 			{
 				case nameof(LogViewerViewModel.LogSource):
 					LogSource = LogView.LogSource;
+					break;
+
+				case nameof(LogViewerViewModel.HighlightFilters):
+					HighlightFilters = LogView.HighlightFilters;
 					break;
 			}
 		}

@@ -134,23 +134,23 @@ namespace Tailviewer.Ui.LogView
 			return null;
 		}
 
-		[Pure]
-		private static Brush CreateBrush(Color color)
-		{
-			var brush = new SolidColorBrush(color);
-			brush.Freeze();
-			return brush;
-		}
-
-		[Pure]
-		private static Color GetAlternatingColor(Color color)
-		{
-			if (color.A == 0 || Colors.White.Equals(color))
-			{
-				return Color.FromRgb(0xE8, 0xF1, 0xF7);
-			}
-
-			return color;
-		}
+	[Pure]
+	public static Brush CreateBrush(Color color)
+	{
+		var brush = new SolidColorBrush(color);
+		brush.Freeze();
+		return brush;
 	}
+
+	[Pure]
+	private static Color GetAlternatingColor(Color color)
+	{
+		if (color.A == 0 || Colors.White.Equals(color))
+		{
+			return Color.FromRgb(0xE8, 0xF1, 0xF7);
+		}
+
+		return color;
+	}
+}
 }

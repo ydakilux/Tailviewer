@@ -8,6 +8,11 @@ namespace Tailviewer.Ui.LogView
 	public struct TextSegment
 	{
 		public TextSegment(string value, Brush foregroundBrush, bool isRegular, TextSettings textSettings)
+			: this(value, foregroundBrush, null, isRegular, textSettings)
+		{
+		}
+
+		public TextSegment(string value, Brush foregroundBrush, Brush backgroundBrush, bool isRegular, TextSettings textSettings)
 		{
 			FormattedText = new FormattedText(Prepare(value),
 			                                  CultureInfo.CurrentUICulture,
@@ -20,6 +25,7 @@ namespace Tailviewer.Ui.LogView
 			//Width = TextHelper.EstimateWidthUpperLimit(value);
 			Width = FormattedText.WidthIncludingTrailingWhitespace;
 			IsRegular = isRegular;
+			BackgroundBrush = backgroundBrush;
 		}
 
 		public string Text => FormattedText.Text;
@@ -45,5 +51,6 @@ namespace Tailviewer.Ui.LogView
 		public readonly FormattedText FormattedText;
 		public readonly bool IsRegular;
 		public readonly double Width;
+		public readonly Brush BackgroundBrush;
 	}
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Ignore Spelling: Tailviewer Indices
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
@@ -16,6 +18,7 @@ using Tailviewer.Api;
 using Tailviewer.BusinessLogic.Searches;
 using Tailviewer.Core;
 using Tailviewer.Settings;
+using Tailviewer.Ui.QuickFilter;
 using Properties = Tailviewer.Core.Properties;
 
 namespace Tailviewer.Ui.LogView
@@ -35,10 +38,11 @@ namespace Tailviewer.Ui.LogView
 		private readonly ScrollBar _verticalScrollBar;
 		private TextSettings _textSettings;
 		private TextBrushes _textBrushes;
-		private readonly List<TextLine> _visibleTextLines;
-		private readonly LogBufferList _visibleBufferBuffer;
-		private readonly DispatchedSearchResults _searchResults;
-		private readonly DispatcherTimer _timer;
+	private readonly List<TextLine> _visibleTextLines;
+	private readonly LogBufferList _visibleBufferBuffer;
+	private readonly DispatchedSearchResults _searchResults;
+	private List<HighlightFilter> _highlightFilters;
+	private readonly DispatcherTimer _timer;
 
 		private int _currentLine;
 		private LogSourceSection _currentlyVisibleSection;
@@ -195,17 +199,27 @@ namespace Tailviewer.Ui.LogView
 			}
 		}
 
-		public ILogSourceSearch Search
+	public ILogSourceSearch Search
+	{
+		get { return _search; }
+		set
 		{
-			get { return _search; }
-			set
-			{
-				_search?.RemoveListener(_searchResults);
-				_search = value;
-				if (_search != null)
-					Search.AddListener(_searchResults);
-			}
+			_search?.RemoveListener(_searchResults);
+			_search = value;
+			if (_search != null)
+				Search.AddListener(_searchResults);
 		}
+	}
+
+	public List<HighlightFilter> HighlightFilters
+	{
+		get { return _highlightFilters; }
+		set
+		{
+			_highlightFilters = value;
+			UpdateVisibleLines();
+		}
+	}
 
 		public int SelectedSearchResultIndex
 		{
@@ -355,16 +369,17 @@ namespace Tailviewer.Ui.LogView
 						}
 					}
 
-					for (int i = 0; i < _currentlyVisibleSection.Count; ++i)
+				for (int i = 0; i < _currentlyVisibleSection.Count; ++i)
+				{
+					var line = new TextLine(_visibleBufferBuffer[i], _hoveredIndices, _selectedIndices,
+					                        _colorByLevel, _textSettings, _textBrushes)
 					{
-						var line = new TextLine(_visibleBufferBuffer[i], _hoveredIndices, _selectedIndices,
-						                        _colorByLevel, _textSettings, _textBrushes)
-						{
-							IsFocused = IsFocused,
-							SearchResults = _searchResults
-						};
-						_visibleTextLines.Add(line);
-					}
+						IsFocused = IsFocused,
+						SearchResults = _searchResults,
+						HighlightFilters = _highlightFilters
+					};
+					_visibleTextLines.Add(line);
+				}
 				}
 
 				Action fn = VisibleLinesChanged;

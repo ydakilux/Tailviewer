@@ -156,6 +156,15 @@ namespace Tailviewer.Ui.SidePanel.QuickFilters
 			return quickFilter;
 		}
 
+		/// <summary>
+		///     Returns all active highlight-only filters with their colors.
+		///     These filters should be used for visual highlighting only, not for hiding lines.
+		/// </summary>
+		public List<HighlightFilter> GetHighlightFilters()
+		{
+			return _filters.GetHighlightFilters();
+		}
+
 		public override void Update()
 		{
 		}

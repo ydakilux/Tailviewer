@@ -16,6 +16,7 @@ using Tailviewer.BusinessLogic.Searches;
 using Tailviewer.Core;
 using Tailviewer.Settings;
 using Tailviewer.Ui.DataSourceTree;
+using Tailviewer.Ui.QuickFilter;
 
 namespace Tailviewer.Ui.LogView
 {
@@ -38,6 +39,7 @@ namespace Tailviewer.Ui.LogView
 		private Geometry _noEntriesIcon;
 		private int _totalLogEntryCount;
 	private ILogSourceSearch _search;
+	private List<HighlightFilter> _highlightFilters;
 
 	/// <summary>
 	/// Event raised when a log line is double-clicked.
@@ -88,20 +90,33 @@ namespace Tailviewer.Ui.LogView
 			}
 		}
 
-		public ILogSourceSearch Search
+	public ILogSourceSearch Search
+	{
+		get { return _search; }
+		private set
 		{
-			get { return _search; }
-			private set
-			{
-				if (value == _search)
-					return;
+			if (value == _search)
+				return;
 
-				_search = value;
-				EmitPropertyChanged();
-			}
+			_search = value;
+			EmitPropertyChanged();
 		}
+	}
 
-		public Geometry NoEntriesIcon
+	public List<HighlightFilter> HighlightFilters
+	{
+		get { return _highlightFilters; }
+		set
+		{
+			if (Equals(value, _highlightFilters))
+				return;
+
+			_highlightFilters = value;
+			EmitPropertyChanged();
+		}
+	}
+
+	public Geometry NoEntriesIcon
 		{
 			get { return _noEntriesIcon; }
 			private set

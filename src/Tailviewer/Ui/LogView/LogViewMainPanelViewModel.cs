@@ -149,7 +149,16 @@ namespace Tailviewer.Ui.LogView
 		{
 			var source = CurrentDataSource;
 			if (source != null)
+			{
 				source.QuickFilterChain = _quickFilters.CreateFilterChain();
+			}
+
+			// Update highlight filters on the current log view
+			var logView = CurrentDataSourceLogView;
+			if (logView != null)
+			{
+				logView.HighlightFilters = _quickFilters.GetHighlightFilters();
+			}
 		}
 
 		public bool CanBeDragged(IDataSourceViewModel source)
@@ -402,6 +411,7 @@ namespace Tailviewer.Ui.LogView
 				_actionCenter,
 				_applicationSettings);
 			CurrentDataSourceLogView.OnLogLineDoubleClicked += OnLogLineDoubleClicked;
+			CurrentDataSourceLogView.HighlightFilters = _quickFilters.GetHighlightFilters();
 		}
 		else
 		{

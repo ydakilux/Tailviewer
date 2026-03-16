@@ -113,6 +113,10 @@ namespace Tailviewer.Ui.QuickFilter
 			foreach (var quickFilter in _viewModels)
 				// ReSharper restore LoopCanBeConvertedToQuery
 			{
+				// Only include filters in "hide mode" (not highlight-only)
+				if (quickFilter.IsHighlightOnly)
+					continue;
+
 				ILogEntryFilter filter = null;
 				try
 				{
@@ -133,24 +137,76 @@ namespace Tailviewer.Ui.QuickFilter
 			return filters;
 		}
 
-		private void QuickFilterOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+	/// <summary>
+	///     Returns all active highlight-only filters with their colors.
+	///     These filters should be used for visual highlighting only, not for hiding lines.
+	/// </summary>
+	public List<HighlightFilter> GetHighlightFilters()
+	{
+		var highlightFilters = new List<HighlightFilter>();
+		Log.InfoFormat("[HIGHLIGHT] GetHighlightFilters called, processing {0} viewmodels", _viewModels.Count);
+		
+		foreach (var quickFilter in _viewModels)
 		{
-			var model = sender as QuickFilterViewModel;
-			if (model == null)
-				return;
-
-			switch (args.PropertyName)
+			Log.InfoFormat("[HIGHLIGHT] QuickFilter: Value='{0}', IsActive={1}, IsHighlightOnly={2}, HighlightColor={3}",
+				quickFilter.Value, quickFilter.IsActive, quickFilter.IsHighlightOnly, quickFilter.HighlightColor);
+			
+			// Only include filters in "highlight mode"
+			if (!quickFilter.IsHighlightOnly || !quickFilter.IsActive)
 			{
-				case "Value":
-				case "IsActive":
-				case "IsInverted":
-				case "DropType":
-				case "MatchType":
-					if (!_isChangingCurrentDataSource)
-						OnFiltersChanged?.Invoke();
-					break;
+				Log.InfoFormat("[HIGHLIGHT] Skipping filter '{0}' (IsActive={1}, IsHighlightOnly={2})", 
+					quickFilter.Value, quickFilter.IsActive, quickFilter.IsHighlightOnly);
+				continue;
+			}
+
+			ILogEntryFilter filter = null;
+			try
+			{
+				filter = quickFilter.CreateFilter();
+				Log.InfoFormat("[HIGHLIGHT] Created filter for '{0}': {1}", quickFilter.Value, filter != null ? filter.ToString() : "NULL");
+			}
+			catch (Exception e)
+			{
+				Log.WarnFormat("[HIGHLIGHT] Caught exception while creating quick filter: {0}", e);
+			}
+
+			if (filter != null)
+			{
+				highlightFilters.Add(new HighlightFilter
+				{
+					Filter = filter,
+					HighlightColor = quickFilter.HighlightColor,
+					ForegroundColor = quickFilter.ForegroundColor
+				});
+				Log.InfoFormat("[HIGHLIGHT] Added highlight filter: Value='{0}', Color={1}", quickFilter.Value, quickFilter.HighlightColor);
 			}
 		}
+
+		Log.InfoFormat("[HIGHLIGHT] GetHighlightFilters returning {0} filters", highlightFilters.Count);
+		return highlightFilters;
+	}
+
+	private void QuickFilterOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+	{
+		var model = sender as QuickFilterViewModel;
+		if (model == null)
+			return;
+
+		switch (args.PropertyName)
+		{
+			case "Value":
+			case "IsActive":
+			case "IsInverted":
+			case "DropType":
+			case "MatchType":
+			case "IsHighlightOnly":
+			case "HighlightColor":
+			case "ForegroundColor":
+				if (!_isChangingCurrentDataSource)
+					OnFiltersChanged?.Invoke();
+				break;
+		}
+	}
 
 		private void OnRemoveQuickFilter(QuickFilterViewModel viewModel)
 		{

@@ -3,6 +3,7 @@
                     xmlns:controls="clr-namespace:Metrolib.Controls;assembly=Metrolib"
                     xmlns:converters="clr-namespace:Metrolib.Converters;assembly=Metrolib"
                     xmlns:quickFilter="clr-namespace:Tailviewer.Ui.QuickFilter"
+                    xmlns:tailviewerControls="clr-namespace:Tailviewer.Ui.Controls"
                     xmlns:ui="clr-namespace:Tailviewer.Ui">
 
     <ResourceDictionary.MergedDictionaries>
@@ -11,6 +12,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <converters:BoolFalseToCollapsedConverter x:Key="BoolFalseToCollapsedConverter" />
+    <converters:InvertBoolConverter x:Key="InvertBoolConverter" />
 
     <DataTemplate DataType="{x:Type quickFilter:QuickFilterViewModel}">
         <Grid Margin="8,4,0,4">
@@ -74,6 +76,8 @@
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
                     <RowDefinition Height="1" />
                 </Grid.RowDefinitions>
 
@@ -81,7 +85,25 @@
                     FilterMatchType="{Binding MatchType, Mode=TwoWay}"
                     Margin="0,8,0,8" />
 
-                <Rectangle Fill="{StaticResource SeparatorBrush}" Grid.Row="2" />
+                <!-- Filter mode toggle (Hide vs Highlight) -->
+                <StackPanel Grid.Row="1" Margin="0,4,0,8">
+                    <TextBlock Text="Filter Mode:" Margin="0,0,0,4" FontSize="11" Foreground="Gray"/>
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton Content="Hide non-matching lines" 
+                                     IsChecked="{Binding IsHighlightOnly, Converter={StaticResource InvertBoolConverter}}" 
+                                     Margin="0,0,16,0"/>
+                        <RadioButton Content="Highlight matching lines" 
+                                     IsChecked="{Binding IsHighlightOnly}"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Color picker -->
+                <StackPanel Grid.Row="2" Margin="0,4,0,8" x:Name="ColorPickerPanel">
+                    <TextBlock Text="Highlight Color:" Margin="0,0,0,4" FontSize="11" Foreground="Gray"/>
+                    <tailviewerControls:SimpleColorPicker SelectedColor="{Binding DataContext.HighlightColor, ElementName=ColorPickerPanel, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <Rectangle Fill="{StaticResource SeparatorBrush}" Grid.Row="4" />
             </Grid>
         </Grid>
     </DataTemplate>

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿// Ignore Spelling: Tailviewer
+
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Tailviewer.Api;
 
@@ -28,42 +30,50 @@ namespace Tailviewer.Core
 			_regex = new Regex(pattern, options);
 		}
 
-		/// <inheritdoc />
-		public bool PassesFilter(IEnumerable<IReadOnlyLogEntry> logEntry)
-		{
-			// ReSharper disable LoopCanBeConvertedToQuery
-			foreach (var logLine in logEntry)
-				// ReSharper restore LoopCanBeConvertedToQuery
-				if (PassesFilter(logLine))
-					return true;
-
-			return false;
-		}
-
-		/// <inheritdoc />
-		public bool PassesFilter(IReadOnlyLogEntry logLine)
-		{
-			if (_regex.IsMatch(logLine.RawContent))
+	/// <inheritdoc />
+	public bool PassesFilter(IEnumerable<IReadOnlyLogEntry> logEntry)
+	{
+		// ReSharper disable LoopCanBeConvertedToQuery
+		foreach (var logLine in logEntry)
+			// ReSharper restore LoopCanBeConvertedToQuery
+			if (PassesFilter(logLine))
 				return true;
 
+		return false;
+	}
+
+	/// <inheritdoc />
+	public bool PassesFilter(IReadOnlyLogEntry logLine)
+	{
+		var rawContent = logLine.RawContent;
+		if (rawContent == null)
 			return false;
-		}
 
-		/// <inheritdoc />
-		public List<LogLineMatch> Match(IReadOnlyLogEntry line)
-		{
-			var ret = new List<LogLineMatch>();
-			Match(line, ret);
-			return ret;
-		}
+		if (_regex.IsMatch(rawContent))
+			return true;
 
-		/// <inheritdoc />
-		public void Match(IReadOnlyLogEntry line, List<LogLineMatch> matches)
-		{
-			var regexMatches = _regex.Matches(line.RawContent);
-			matches.Capacity += regexMatches.Count;
-			for (var i = 0; i < regexMatches.Count; ++i)
-				matches.Add(new LogLineMatch(regexMatches[i]));
-		}
+		return false;
+	}
+
+	/// <inheritdoc />
+	public List<LogLineMatch> Match(IReadOnlyLogEntry line)
+	{
+		var ret = new List<LogLineMatch>();
+		Match(line, ret);
+		return ret;
+	}
+
+	/// <inheritdoc />
+	public void Match(IReadOnlyLogEntry line, List<LogLineMatch> matches)
+	{
+		var rawContent = line.RawContent;
+		if (rawContent == null)
+			return;
+
+		var regexMatches = _regex.Matches(rawContent);
+		matches.Capacity += regexMatches.Count;
+		for (var i = 0; i < regexMatches.Count; ++i)
+			matches.Add(new LogLineMatch(regexMatches[i]));
+	}
 	}
 }

@@ -25,6 +25,7 @@ using Tailviewer.Ui.LogView.LineNumbers;
 using Tailviewer.Ui.LogView.LogLevels;
 using Tailviewer.Ui.LogView.Messages;
 using Tailviewer.Ui.LogView.Timestamps;
+using Tailviewer.Ui.QuickFilter;
 using Properties = Tailviewer.Core.Properties;
 
 namespace Tailviewer.Ui.LogView
@@ -43,13 +44,17 @@ namespace Tailviewer.Ui.LogView
 			DependencyProperty.Register("LogSource", typeof(ILogSource), typeof(LogEntryListView),
 				new PropertyMetadata(defaultValue: null, propertyChangedCallback: OnLogFileChanged));
 
-		public static readonly DependencyProperty SearchProperty =
-			DependencyProperty.Register("Search", typeof(ILogSourceSearch), typeof(LogEntryListView),
-				new PropertyMetadata(defaultValue: null, propertyChangedCallback: OnSearchChanged));
+	public static readonly DependencyProperty SearchProperty =
+		DependencyProperty.Register("Search", typeof(ILogSourceSearch), typeof(LogEntryListView),
+			new PropertyMetadata(defaultValue: null, propertyChangedCallback: OnSearchChanged));
 
-		public static readonly DependencyProperty FollowTailProperty =
-			DependencyProperty.Register("FollowTail", typeof(bool), typeof(LogEntryListView),
-				new PropertyMetadata(defaultValue: false, propertyChangedCallback: OnFollowTailChanged));
+	public static readonly DependencyProperty HighlightFiltersProperty =
+		DependencyProperty.Register("HighlightFilters", typeof(List<HighlightFilter>), typeof(LogEntryListView),
+			new PropertyMetadata(default(List<HighlightFilter>), OnHighlightFiltersChanged));
+
+	public static readonly DependencyProperty FollowTailProperty =
+		DependencyProperty.Register("FollowTail", typeof(bool), typeof(LogEntryListView),
+			new PropertyMetadata(defaultValue: false, propertyChangedCallback: OnFollowTailChanged));
 
 		public static readonly DependencyProperty ShowLineNumbersProperty =
 			DependencyProperty.Register("ShowLineNumbers", typeof(bool), typeof(LogEntryListView),
@@ -278,13 +283,19 @@ namespace Tailviewer.Ui.LogView
 			set { SetValue(LogSourceProperty, value); }
 		}
 
-		public ILogSourceSearch Search
-		{
-			get { return (ILogSourceSearch) GetValue(SearchProperty); }
-			set { SetValue(SearchProperty, value); }
-		}
+	public ILogSourceSearch Search
+	{
+		get { return (ILogSourceSearch) GetValue(SearchProperty); }
+		set { SetValue(SearchProperty, value); }
+	}
 
-		public List<TextLine> VisibleTextLines => PartTextCanvas.VisibleTextLines;
+	public List<HighlightFilter> HighlightFilters
+	{
+		get { return (List<HighlightFilter>)GetValue(HighlightFiltersProperty); }
+		set { SetValue(HighlightFiltersProperty, value); }
+	}
+
+	public List<TextLine> VisibleTextLines => PartTextCanvas.VisibleTextLines;
 
 		public IEnumerable<LogLineIndex> SelectedIndices
 		{
@@ -456,20 +467,30 @@ namespace Tailviewer.Ui.LogView
 			_dataSourceCanvas.DisplayMode = displayMode;
 		}
 
-		private static void OnSearchChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
-		{
-			((LogEntryListView) dependencyObject).OnSearchChanged((ILogSourceSearch) args.NewValue);
-		}
+	private static void OnSearchChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+	{
+		((LogEntryListView) dependencyObject).OnSearchChanged((ILogSourceSearch) args.NewValue);
+	}
 
-		private void OnSearchChanged(ILogSourceSearch search)
-		{
-			PartTextCanvas.Search = search;
-		}
+	private void OnSearchChanged(ILogSourceSearch search)
+	{
+		PartTextCanvas.Search = search;
+	}
 
-		private static void OnColorByLevelChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
-		{
-			((LogEntryListView) dependencyObject).OnColorByLevelChanged((bool) args.NewValue);
-		}
+	private static void OnHighlightFiltersChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+	{
+		((LogEntryListView)dependencyObject).OnHighlightFiltersChanged((List<HighlightFilter>)args.NewValue);
+	}
+
+	private void OnHighlightFiltersChanged(List<HighlightFilter> highlightFilters)
+	{
+		PartTextCanvas.HighlightFilters = highlightFilters;
+	}
+
+	private static void OnColorByLevelChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+	{
+		((LogEntryListView) dependencyObject).OnColorByLevelChanged((bool) args.NewValue);
+	}
 
 		private void OnColorByLevelChanged(bool colorByLevel)
 		{

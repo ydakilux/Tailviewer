@@ -231,6 +231,7 @@
                     DataSource="{Binding DataSource.DataSource, ElementName=This}"
                     LogSource="{Binding LogSource, ElementName=This}"
                     Search="{Binding Search, ElementName=This}"
+                    HighlightFilters="{Binding HighlightFilters, ElementName=This}"
                     CurrentLine="{Binding CurrentLogLine, Mode=TwoWay, ElementName=This}"
                     MergedDataSourceDisplayMode="{Binding MergedDataSourceDisplayMode, Mode=TwoWay, ElementName=This}"
                     Settings="{Binding Settings, ElementName=This}"

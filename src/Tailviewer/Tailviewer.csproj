@@ -281,6 +281,9 @@
     <Compile Include="Ui\Settings\CustomFormats\CustomFormatViewModel.cs" />
     <Compile Include="Ui\Settings\EncodingViewModel.cs" />
     <Compile Include="Ui\Settings\LogLevelSettingsViewModel.cs" />
+    <Compile Include="Ui\Controls\SimpleColorPicker.xaml.cs">
+      <DependentUpon>SimpleColorPicker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Ui\QuickFilter\FilterToggleButton.cs" />
     <Compile Include="Ui\LogView\AbstractLogEntryValueFormatter.cs" />
     <Compile Include="Ui\LogView\AbstractLogColumnPresenter.cs" />
@@ -417,6 +420,7 @@
     <Compile Include="Ui\SidePanel\QuickFilters\QuickFiltersSidePanelViewModel.cs" />
     <Compile Include="Ui\QuickFilter\QuickFiltersViewModel.cs" />
     <Compile Include="Ui\QuickFilter\QuickFilterViewModel.cs" />
+    <Compile Include="Ui\QuickFilter\HighlightFilter.cs" />
     <Compile Include="Ui\Converters\BrushType.cs" />
     <Compile Include="Settings\ApplicationSettings.cs" />
     <Compile Include="Settings\DataSourceSettings.cs" />
@@ -490,6 +494,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Ui\QuickFilter\FilterToggleButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Ui\Controls\SimpleColorPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
