@@ -151,6 +151,7 @@ namespace Tailviewer.Ui.LogView
 			if (source != null)
 			{
 				source.QuickFilterChain = _quickFilters.CreateFilterChain();
+				source.QuickFilterCombineMode = _quickFilters.FilterCombineMode;
 			}
 
 			// Update highlight filters on the current log view

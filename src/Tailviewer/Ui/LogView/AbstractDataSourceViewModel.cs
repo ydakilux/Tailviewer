@@ -757,6 +757,12 @@ namespace Tailviewer.Ui.LogView
 			set { _dataSource.QuickFilterChain = value; }
 		}
 
+		public FilterCombineMode QuickFilterCombineMode
+		{
+			get { return _dataSource.QuickFilterCombineMode; }
+			set { _dataSource.QuickFilterCombineMode = value; }
+		}
+
 		public void RequestBringIntoView(LogLineIndex index)
 		{
 			OnRequestBringIntoView?.Invoke(this, index);

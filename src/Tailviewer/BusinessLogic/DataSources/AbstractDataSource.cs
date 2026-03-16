@@ -29,6 +29,7 @@ namespace Tailviewer.BusinessLogic.DataSources
 		private ILogEntryFilter _logEntryFilter;
 		private ILogSource _filteredLogSource;
 		private IEnumerable<ILogEntryFilter> _quickFilterChain;
+		private FilterCombineMode _quickFilterCombineMode;
 		private bool _isDisposed;
 		private ILogSource _previousUnfilteredLogSource;
 		private string _findAllFilter;
@@ -44,6 +45,7 @@ namespace Tailviewer.BusinessLogic.DataSources
 			_taskScheduler = taskScheduler;
 			_settings = settings;
 			_maximumWaitTime = maximumWaitTime;
+			_quickFilterCombineMode = FilterCombineMode.Or; // Default to OR mode
 
 			_logSource = new LogSourceProxy(taskScheduler, maximumWaitTime);
 			_search = new LogSourceSearchProxy(taskScheduler, _logSource, maximumWaitTime);
@@ -81,6 +83,19 @@ namespace Tailviewer.BusinessLogic.DataSources
 
 				_quickFilterChain = value;
 				CreateFilteredLogFile();
+			}
+		}
+
+		public FilterCombineMode QuickFilterCombineMode
+		{
+			get { return _quickFilterCombineMode; }
+			set
+			{
+				if (_quickFilterCombineMode != value)
+				{
+					_quickFilterCombineMode = value;
+					CreateFilteredLogFile();
+				}
 			}
 		}
 
@@ -332,7 +347,7 @@ namespace Tailviewer.BusinessLogic.DataSources
 
 			LevelFlags levelFilter = LevelFilter;
 			ILogLineFilter logLineFilter = CreateLogLineFilter();
-			ILogEntryFilter logEntryFilter = Filter.Create(levelFilter, _quickFilterChain);
+			ILogEntryFilter logEntryFilter = Filter.Create(levelFilter, _quickFilterChain, _quickFilterCombineMode);
 			if (Filter.IsFilter(logEntryFilter) || Filter.IsFilter(logLineFilter))
 			{
 				_logEntryFilter = logEntryFilter;

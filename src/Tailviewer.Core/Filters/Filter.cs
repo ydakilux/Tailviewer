@@ -49,19 +49,21 @@ namespace Tailviewer.Core
 		///     Creates a new <see cref="ILogLineFilter"/> from the given values.
 		/// </summary>
 		/// <param name="filters"></param>
+		/// <param name="combineMode"></param>
 		/// <returns></returns>
-		public static ILogLineFilter Create(IEnumerable<ILogLineFilter> filters)
+		public static ILogLineFilter Create(IEnumerable<ILogLineFilter> filters, FilterCombineMode combineMode = FilterCombineMode.Or)
 		{
 			var tmp = filters.Where(x => x != null).Select(x => (ILogEntryFilter)x).ToList();
-			return Create(tmp);
+			return Create(tmp, combineMode);
 		}
 
 		/// <summary>
 		///     Creates a new <see cref="ILogEntryFilter" /> from the given values.
 		/// </summary>
 		/// <param name="filters"></param>
+		/// <param name="combineMode"></param>
 		/// <returns></returns>
-		public static ILogEntryFilter Create(IEnumerable<ILogEntryFilter> filters)
+		public static ILogEntryFilter Create(IEnumerable<ILogEntryFilter> filters, FilterCombineMode combineMode = FilterCombineMode.Or)
 		{
 			var tmp = filters.Where(x => x != null).ToList();
 			if (tmp.Count == 0)
@@ -73,7 +75,12 @@ namespace Tailviewer.Core
 					return null;
 				return filter;
 			}
-			return new AndFilter(tmp);
+			
+			// Use OrFilter or AndFilter based on the combine mode
+			if (combineMode == FilterCombineMode.Or)
+				return new OrFilter(tmp);
+			else
+				return new AndFilter(tmp);
 		}
 
 		/// <summary>
@@ -96,7 +103,7 @@ namespace Tailviewer.Core
 		public static ILogEntryFilter Create(string substringFilter,
 			LevelFlags levelFilter)
 		{
-			return Create(CreateFilters(substringFilter, ignoreCase: true, levelFilter: levelFilter));
+			return Create(CreateFilters(substringFilter, ignoreCase: true, levelFilter: levelFilter), FilterCombineMode.And);
 		}
 
 		/// <summary>
@@ -144,7 +151,33 @@ namespace Tailviewer.Core
 			var filters = new List<ILogEntryFilter> {Create(levelFilter)};
 			if (andFilters != null)
 				filters.AddRange(andFilters);
-			return Create(filters);
+			return Create(filters, FilterCombineMode.And);
+		}
+
+		/// <summary>
+		///     Creates a new <see cref="ILogEntryFilter" /> from the given values with a specified combine mode.
+		///     The level filter is always AND'd with the result of combining the additional filters.
+		///     The combine mode only applies among the additional filters themselves.
+		/// </summary>
+		/// <param name="levelFilter"></param>
+		/// <param name="additionalFilters"></param>
+		/// <param name="combineMode"></param>
+		/// <returns></returns>
+		public static ILogEntryFilter Create(LevelFlags levelFilter,
+			IEnumerable<ILogEntryFilter> additionalFilters,
+			FilterCombineMode combineMode)
+		{
+			// Combine the quick filters among themselves using the requested mode (AND/OR)
+			var quickFilter = additionalFilters != null ? Create(additionalFilters, combineMode) : null;
+
+			// The level filter is always AND'd on top — it is a mandatory pre-condition
+			var level = Create(levelFilter);
+			if (level == null)
+				return quickFilter;
+			if (quickFilter == null)
+				return level;
+
+			return new AndFilter(new List<ILogEntryFilter> {level, quickFilter});
 		}
 
 		/// <summary>
@@ -163,7 +196,7 @@ namespace Tailviewer.Core
 			var filters = CreateFilters(substringFilter, ignoreCase, levelFilter);
 			if (additionalFilters != null)
 				filters.AddRange(additionalFilters);
-			return Create(filters);
+			return Create(filters, FilterCombineMode.And);
 		}
 
 		/// <summary>

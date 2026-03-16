@@ -7,6 +7,7 @@ using System.Windows.Media;
 using Metrolib;
 using Tailviewer.Api;
 using Tailviewer.BusinessLogic.Filters;
+using Tailviewer.Core;
 using Tailviewer.Settings;
 using Tailviewer.Ui.DataSourceTree;
 using Tailviewer.Ui.QuickFilter;
@@ -51,6 +52,23 @@ namespace Tailviewer.Ui.SidePanel.QuickFilters
 		public TimeFiltersViewModel TimeFilters => _timeFilters;
 
 		public IEnumerable<QuickFilterViewModel> QuickFilters => _filters.QuickFilters;
+
+		/// <summary>
+		///     Gets or sets the filter combine mode (AND vs OR).
+		/// </summary>
+		public FilterCombineMode FilterCombineMode
+		{
+			get { return _filters.FilterCombineMode; }
+			set
+			{
+				if (_filters.FilterCombineMode != value)
+				{
+					_filters.FilterCombineMode = value;
+					EmitPropertyChanged();
+					_settings.SaveAsync();
+				}
+			}
+		}
 
 		public IDataSourceViewModel CurrentDataSource
 		{

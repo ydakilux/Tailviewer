@@ -40,6 +40,12 @@ namespace Tailviewer.BusinessLogic.Filters
 
 		public TimeFilter TimeFilter => _timeFilter;
 
+		public FilterCombineMode FilterCombineMode
+		{
+			get { return _settings.FilterCombineMode; }
+			set { _settings.FilterCombineMode = value; }
+		}
+
 		/// <summary>
 		///     Adds a new quickfilter.
 		/// </summary>

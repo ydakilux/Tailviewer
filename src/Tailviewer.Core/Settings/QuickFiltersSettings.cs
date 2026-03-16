@@ -8,6 +8,22 @@ using Tailviewer.Api;
 namespace Tailviewer.Core
 {
 	/// <summary>
+	///     Defines how multiple filters are combined when filtering log entries.
+	/// </summary>
+	public enum FilterCombineMode
+	{
+		/// <summary>
+		///     All filters must match for a line to be shown (more restrictive).
+		/// </summary>
+		And,
+
+		/// <summary>
+		///     At least one filter must match for a line to be shown (more permissive).
+		/// </summary>
+		Or
+	}
+
+	/// <summary>
 	///     The list of all application-wide quick filters.
 	/// </summary>
 	public sealed class QuickFiltersSettings
@@ -16,6 +32,7 @@ namespace Tailviewer.Core
 		, ICloneable
 	{
 		private TimeFilterSettings _timeFilter;
+		private FilterCombineMode _filterCombineMode;
 
 		/// <summary>
 		/// 
@@ -23,6 +40,7 @@ namespace Tailviewer.Core
 		public QuickFiltersSettings()
 		{
 			_timeFilter = new TimeFilterSettings();
+			_filterCombineMode = FilterCombineMode.Or; // Default to OR mode
 		}
 
 		object ICloneable.Clone()
@@ -34,6 +52,15 @@ namespace Tailviewer.Core
 		/// 
 		/// </summary>
 		public TimeFilterSettings TimeFilter => _timeFilter;
+
+		/// <summary>
+		///     Gets or sets how multiple filters are combined (AND vs OR).
+		/// </summary>
+		public FilterCombineMode FilterCombineMode
+		{
+			get { return _filterCombineMode; }
+			set { _filterCombineMode = value; }
+		}
 
 		/// <summary>
 		///     Restores the values of this object from the given xml document.
@@ -54,6 +81,15 @@ namespace Tailviewer.Core
 
 					case "timefilter":
 						_timeFilter.Restore(subtree);
+						break;
+
+					case "combinemode":
+						if (subtree.Read())
+						{
+							FilterCombineMode mode;
+							if (Enum.TryParse(subtree.Value, out mode))
+								_filterCombineMode = mode;
+						}
 						break;
 				}
 
@@ -77,6 +113,10 @@ namespace Tailviewer.Core
 			writer.WriteStartElement("timefilter");
 			_timeFilter.Save(writer);
 			writer.WriteEndElement();
+
+			writer.WriteStartElement("combinemode");
+			writer.WriteString(_filterCombineMode.ToString());
+			writer.WriteEndElement();
 		}
 
 		/// <summary>
@@ -88,6 +128,7 @@ namespace Tailviewer.Core
 			var filters = new QuickFiltersSettings();
 			filters.AddRange(this.Select(x => x.Clone()));
 			filters._timeFilter = _timeFilter.Clone();
+			filters._filterCombineMode = _filterCombineMode;
 			return filters;
 		}
 

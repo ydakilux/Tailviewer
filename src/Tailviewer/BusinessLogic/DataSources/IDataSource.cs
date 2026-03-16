@@ -25,6 +25,11 @@ namespace Tailviewer.BusinessLogic.DataSources
 		IEnumerable<ILogEntryFilter> QuickFilterChain { get; set; }
 
 		/// <summary>
+		///     Specifies how the filters in <see cref="QuickFilterChain"/> should be combined (AND vs OR).
+		/// </summary>
+		FilterCombineMode QuickFilterCombineMode { get; set; }
+
+		/// <summary>
 		///     The final filter which is used to filter the <see cref="UnfilteredLogSource"/> into the <see cref="FilteredLogSource"/>.
 		/// </summary>
 		/// <remarks>

@@ -10,6 +10,7 @@ using Metrolib;
 using Tailviewer.Api;
 using Tailviewer.BusinessLogic.DataSources;
 using Tailviewer.BusinessLogic.Filters;
+using Tailviewer.Core;
 
 namespace Tailviewer.Ui.QuickFilter
 {
@@ -43,6 +44,23 @@ namespace Tailviewer.Ui.QuickFilter
 		public ICommand AddCommand { get; }
 
 		public IEnumerable<QuickFilterViewModel> QuickFilters => _viewModels;
+
+		/// <summary>
+		///     Gets or sets the filter combine mode (AND vs OR).
+		/// </summary>
+		public FilterCombineMode FilterCombineMode
+		{
+			get { return _quickFilters.FilterCombineMode; }
+			set
+			{
+				if (_quickFilters.FilterCombineMode != value)
+				{
+					_quickFilters.FilterCombineMode = value;
+					EmitPropertyChanged();
+					OnFiltersChanged?.Invoke();
+				}
+			}
+		}
 
 		public IDataSource CurrentDataSource
 		{
@@ -151,11 +169,13 @@ namespace Tailviewer.Ui.QuickFilter
 			Log.InfoFormat("[HIGHLIGHT] QuickFilter: Value='{0}', IsActive={1}, IsHighlightOnly={2}, HighlightColor={3}",
 				quickFilter.Value, quickFilter.IsActive, quickFilter.IsHighlightOnly, quickFilter.HighlightColor);
 			
-			// Only include filters in "highlight mode"
-			if (!quickFilter.IsHighlightOnly || !quickFilter.IsActive)
+			// Include highlight-only filters, AND hide-mode filters that have a highlight color set
+			bool shouldHighlight = quickFilter.IsActive &&
+			                       (quickFilter.IsHighlightOnly || quickFilter.HighlightColor.HasValue);
+			if (!shouldHighlight)
 			{
-				Log.InfoFormat("[HIGHLIGHT] Skipping filter '{0}' (IsActive={1}, IsHighlightOnly={2})", 
-					quickFilter.Value, quickFilter.IsActive, quickFilter.IsHighlightOnly);
+				Log.InfoFormat("[HIGHLIGHT] Skipping filter '{0}' (IsActive={1}, IsHighlightOnly={2}, HasColor={3})", 
+					quickFilter.Value, quickFilter.IsActive, quickFilter.IsHighlightOnly, quickFilter.HighlightColor.HasValue);
 				continue;
 			}
 

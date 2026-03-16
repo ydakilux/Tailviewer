@@ -15,6 +15,11 @@ namespace Tailviewer.BusinessLogic.Filters
 		TimeFilter TimeFilter { get; }
 
 		/// <summary>
+		///     Gets or sets how multiple filters are combined (AND vs OR).
+		/// </summary>
+		FilterCombineMode FilterCombineMode { get; set; }
+
+		/// <summary>
 		///     Adds a new quickfilter.
 		/// </summary>
 		/// <returns></returns>

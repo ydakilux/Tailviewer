@@ -397,6 +397,7 @@
     <Compile Include="Ui\Converters\SkippedDueToTimestampConverter.cs" />
     <Compile Include="Ui\Converters\VersionConverter.cs" />
     <Compile Include="Ui\Converters\ZeroToHiddenConverter.cs" />
+    <Compile Include="Ui\Converters\FilterCombineModeToOrConverter.cs" />
     <Compile Include="Ui\DragLayer.cs" />
     <Compile Include="Ui\LogView\AbstractDataSourceViewModel.cs" />
     <Compile Include="Collections\EnumerableExtensions.cs" />

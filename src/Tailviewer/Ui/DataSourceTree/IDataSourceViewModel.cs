@@ -7,6 +7,7 @@ using Tailviewer.Api;
 using Tailviewer.Archiver.Plugins.Description;
 using Tailviewer.BusinessLogic.DataSources;
 using Tailviewer.Collections;
+using Tailviewer.Core;
 using Tailviewer.Ui.LogView;
 using Tailviewer.Ui.Menu;
 
@@ -113,6 +114,7 @@ namespace Tailviewer.Ui.DataSourceTree
 		LevelFlags LevelsFilter { get; set; }
 		IDataSourceViewModel Parent { get; set; }
 		IEnumerable<ILogEntryFilter> QuickFilterChain { get; set; }
+		FilterCombineMode QuickFilterCombineMode { get; set; }
 
 		/// <summary>
 		/// 

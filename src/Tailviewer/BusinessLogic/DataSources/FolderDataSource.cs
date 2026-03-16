@@ -110,6 +110,12 @@ namespace Tailviewer.BusinessLogic.DataSources
 			}
 		}
 
+		public FilterCombineMode QuickFilterCombineMode
+		{
+			get { return _mergedDataSource.QuickFilterCombineMode; }
+			set { _mergedDataSource.QuickFilterCombineMode = value; }
+		}
+
 		public ILogEntryFilter LogEntryFilter => _mergedDataSource.LogEntryFilter;
 
 		public ILogSource OriginalLogSource
