@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using log4net;
-using Metrolib;
 using Tailviewer.Api;
 using Tailviewer.BusinessLogic.DataSources;
 using Tailviewer.BusinessLogic.Filters;
@@ -127,13 +126,13 @@ namespace Tailviewer.Ui.QuickFilter
 		public List<ILogEntryFilter> CreateFilterChain()
 		{
 			var filters = new List<ILogEntryFilter>(_viewModels.Count);
-			// ReSharper disable LoopCanBeConvertedToQuery
-			foreach (var quickFilter in _viewModels)
-				// ReSharper restore LoopCanBeConvertedToQuery
-			{
-				// Only include filters in "hide mode" (not highlight-only)
-				if (quickFilter.IsHighlightOnly)
-					continue;
+		// ReSharper disable LoopCanBeConvertedToQuery
+		foreach (var quickFilter in _viewModels)
+			// ReSharper restore LoopCanBeConvertedToQuery
+		{
+			// Only include filters in "hide mode" (not highlight-only)
+			if (quickFilter.IsHighlightOnly)
+				continue;
 
 				ILogEntryFilter filter = null;
 				try
@@ -162,20 +161,14 @@ namespace Tailviewer.Ui.QuickFilter
 	public List<HighlightFilter> GetHighlightFilters()
 	{
 		var highlightFilters = new List<HighlightFilter>();
-		Log.InfoFormat("[HIGHLIGHT] GetHighlightFilters called, processing {0} viewmodels", _viewModels.Count);
 		
 		foreach (var quickFilter in _viewModels)
 		{
-			Log.InfoFormat("[HIGHLIGHT] QuickFilter: Value='{0}', IsActive={1}, IsHighlightOnly={2}, HighlightColor={3}",
-				quickFilter.Value, quickFilter.IsActive, quickFilter.IsHighlightOnly, quickFilter.HighlightColor);
-			
 			// Include highlight-only filters, AND hide-mode filters that have a highlight color set
 			bool shouldHighlight = quickFilter.IsActive &&
 			                       (quickFilter.IsHighlightOnly || quickFilter.HighlightColor.HasValue);
 			if (!shouldHighlight)
 			{
-				Log.InfoFormat("[HIGHLIGHT] Skipping filter '{0}' (IsActive={1}, IsHighlightOnly={2}, HasColor={3})", 
-					quickFilter.Value, quickFilter.IsActive, quickFilter.IsHighlightOnly, quickFilter.HighlightColor.HasValue);
 				continue;
 			}
 
@@ -183,11 +176,10 @@ namespace Tailviewer.Ui.QuickFilter
 			try
 			{
 				filter = quickFilter.CreateFilter();
-				Log.InfoFormat("[HIGHLIGHT] Created filter for '{0}': {1}", quickFilter.Value, filter != null ? filter.ToString() : "NULL");
 			}
 			catch (Exception e)
 			{
-				Log.WarnFormat("[HIGHLIGHT] Caught exception while creating quick filter: {0}", e);
+				Log.DebugFormat("Caught exception while creating quick filter: {0}", e);
 			}
 
 			if (filter != null)
@@ -198,11 +190,9 @@ namespace Tailviewer.Ui.QuickFilter
 					HighlightColor = quickFilter.HighlightColor,
 					ForegroundColor = quickFilter.ForegroundColor
 				});
-				Log.InfoFormat("[HIGHLIGHT] Added highlight filter: Value='{0}', Color={1}", quickFilter.Value, quickFilter.HighlightColor);
 			}
 		}
 
-		Log.InfoFormat("[HIGHLIGHT] GetHighlightFilters returning {0} filters", highlightFilters.Count);
 		return highlightFilters;
 	}
 

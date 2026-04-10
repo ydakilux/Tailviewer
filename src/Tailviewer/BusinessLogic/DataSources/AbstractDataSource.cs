@@ -73,18 +73,18 @@ namespace Tailviewer.BusinessLogic.DataSources
 
 		public ILogEntryFilter LogEntryFilter => _logEntryFilter;
 
-		public IEnumerable<ILogEntryFilter> QuickFilterChain
+	public IEnumerable<ILogEntryFilter> QuickFilterChain
+	{
+		get { return _quickFilterChain; }
+		set
 		{
-			get { return _quickFilterChain; }
-			set
-			{
-				if (ReferenceEquals(value, _quickFilterChain))
-					return;
+			if (ReferenceEquals(value, _quickFilterChain))
+				return;
 
-				_quickFilterChain = value;
-				CreateFilteredLogFile();
-			}
+			_quickFilterChain = value;
+			CreateFilteredLogFile();
 		}
+	}
 
 		public FilterCombineMode QuickFilterCombineMode
 		{
@@ -346,8 +346,8 @@ namespace Tailviewer.BusinessLogic.DataSources
 			_filteredLogSource?.Dispose();
 
 			LevelFlags levelFilter = LevelFilter;
-			ILogLineFilter logLineFilter = CreateLogLineFilter();
 			ILogEntryFilter logEntryFilter = Filter.Create(levelFilter, _quickFilterChain, _quickFilterCombineMode);
+			ILogLineFilter logLineFilter = CreateLogLineFilter(logEntryFilter);
 			if (Filter.IsFilter(logEntryFilter) || Filter.IsFilter(logLineFilter))
 			{
 				_logEntryFilter = logEntryFilter;
@@ -362,13 +362,15 @@ namespace Tailviewer.BusinessLogic.DataSources
 			}
 		}
 
-		private ILogLineFilter CreateLogLineFilter()
+		private ILogLineFilter CreateLogLineFilter(ILogEntryFilter logEntryFilter)
 		{
 			var filters = new List<ILogLineFilter>();
 			if (HideEmptyLines)
 				filters.Add(new EmptyLogLineFilter());
 			if (_hideLogLineCount != null)
 				filters.Add(new RangeFilter(new LogSourceSection(0, _hideLogLineCount.Value)));
+			if (logEntryFilter != null)
+				filters.Add(logEntryFilter);
 			return Filter.Create(filters);
 		}
 

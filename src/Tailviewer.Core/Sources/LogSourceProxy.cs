@@ -157,7 +157,9 @@ namespace Tailviewer.Core
 			set
 			{
 				if (value == _source)
+				{
 					return;
+				}
 
 				_source?.RemoveListener(this);
 

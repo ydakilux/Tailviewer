@@ -165,13 +165,6 @@ public sealed class TextLine
 							var filterMatches = new List<LogLineMatch>();
 							highlightFilter.Filter.Match(_logEntry, filterMatches);
 							
-							if (filterMatches.Count > 0)
-							{
-								log4net.LogManager.GetLogger(typeof(TextLine)).InfoFormat(
-									"[RENDER] Line {0} matched filter, {1} matches, Color={2}",
-									_logEntry.Index, filterMatches.Count, highlightFilter.HighlightColor);
-							}
-							
 							foreach (var match in filterMatches)
 							{
 								var backgroundBrush = highlightFilter.HighlightColor.HasValue
@@ -356,17 +349,6 @@ public sealed class TextLine
 		{
 			CreateTextIfNecessary();
 
-			int coloredCount = 0;
-			for (int k = 0; k < _segments.Count; ++k)
-				if (_segments[k].BackgroundBrush != null)
-					coloredCount++;
-			if (coloredCount > 0 || (_highlightFilters != null && _highlightFilters.Count > 0))
-			{
-				log4net.LogManager.GetLogger(typeof(TextLine)).InfoFormat(
-					"[RENDER3] After CreateTextIfNecessary: totalSegments={0} coloredSegments={1} highlightFilters={2} line={3}",
-					_segments.Count, coloredCount, _highlightFilters?.Count ?? 0, _logEntry.Index);
-			}
-
 			Brush regularBackgroundBrush = BackgroundBrush;
 
 			double x = xOffset;
@@ -374,15 +356,6 @@ public sealed class TextLine
 		for (int i = 0; i < _segments.Count; ++i)
 		{
 			TextSegment segment = _segments[i];
-			if (segment.BackgroundBrush != null)
-			{
-				log4net.LogManager.GetLogger(typeof(TextLine)).InfoFormat(
-					"[RENDER2] Segment[{0}] '{1}' BackgroundBrush={2} x={3} visible={4} actualWidth={5}",
-					i,
-					segment.Text?.Length > 20 ? segment.Text.Substring(0, 20) : segment.Text,
-					segment.BackgroundBrush,
-					x, IsVisible(actualWidth, x, segment.Width), actualWidth);
-			}
 			if (IsVisible(actualWidth, x, segment.Width))
 			{
 				Brush brush;

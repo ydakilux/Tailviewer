@@ -254,6 +254,151 @@ namespace Tailviewer.Acceptance.Tests.BusinessLogic.DataSources
 			}
 		}
 
+		[Test]
+		[Description("Verifies that FilteredLogSource works directly with InMemoryLogSource")]
+		public void TestFilteredLogSourceDirect()
+		{
+			var logFile = new InMemoryLogSource();
+			logFile.AddEntry("Hello registered world");
+			logFile.AddEntry("Some other line");
+			logFile.AddEntry("Another registered entry");
+			logFile.AddEntry("Not matching");
+
+			var filter = new SubstringFilter("registered", true);
+			using (var filteredSource = new FilteredLogSource(_scheduler, TimeSpan.Zero, logFile, null, filter))
+			{
+				_scheduler.Run(10);
+				filteredSource.GetProperty(Properties.LogEntryCount).Should().Be(2,
+					"because only 2 entries contain 'registered'");
+			}
+		}
+
+		[Test]
+		[Description("Verifies that FilteredLogSource works via proxy chain like real data source")]
+		public void TestFilteredLogSourceViaProxy()
+		{
+			var logFile = new InMemoryLogSource();
+			logFile.AddEntry("Hello registered world");
+			logFile.AddEntry("Some other line");
+			logFile.AddEntry("Another registered entry");
+			logFile.AddEntry("Not matching");
+
+			// Create proxy like FileDataSource does for UnfilteredLogSource
+			using (var unfilteredProxy = new LogSourceProxy(_scheduler, TimeSpan.Zero, logFile))
+			{
+				_scheduler.Run(10);
+				unfilteredProxy.GetProperty(Properties.LogEntryCount).Should().Be(4);
+
+				// Create FilteredLogSource wrapping the proxy, like CreateFilteredLogFile does
+				var filter = new SubstringFilter("registered", true);
+				using (var filteredSource = new FilteredLogSource(_scheduler, TimeSpan.Zero, unfilteredProxy, null, filter))
+				{
+					_scheduler.Run(10);
+					filteredSource.GetProperty(Properties.LogEntryCount).Should().Be(2,
+						"because only 2 entries contain 'registered'");
+
+					// Now wrap in another proxy like the data source does
+					using (var outerProxy = new LogSourceProxy(_scheduler, TimeSpan.Zero))
+					{
+						outerProxy.InnerLogSource = filteredSource;
+						_scheduler.Run(10);
+						outerProxy.GetProperty(Properties.LogEntryCount).Should().Be(2,
+							"because the outer proxy should report the filtered count");
+					}
+				}
+			}
+		}
+
+		[Test]
+		[Description("Verifies that setting QuickFilterChain filters log entries")]
+		public void TestQuickFilterChain_HideMode()
+		{
+			var settings = CreateDataSource();
+			var logFile = new InMemoryLogSource();
+			logFile.AddEntry("Hello registered world", LevelFlags.Info);
+			logFile.AddEntry("Some other line", LevelFlags.Info);
+			logFile.AddEntry("Another registered entry", LevelFlags.Info);
+			logFile.AddEntry("Not matching", LevelFlags.Info);
+			using (var dataSource = new FileDataSource(_scheduler, settings, logFile, TimeSpan.Zero))
+			{
+				_scheduler.Run(10);
+				dataSource.FilteredLogSource.GetProperty(Properties.LogEntryCount).Should().Be(4,
+					"because no filter is set yet");
+
+				// Set a filter chain (simulating "Hide non-matching lines" mode)
+				var filter = Filter.Create("registered", FilterMatchType.SubstringFilter, true, false);
+				dataSource.QuickFilterChain = new List<ILogEntryFilter> { filter };
+				_scheduler.Run(100);
+
+				dataSource.FilteredLogSource.GetProperty(Properties.LogEntryCount).Should().Be(2,
+					"because only two entries contain 'registered'");
+			}
+		}
+
+		[Test]
+		[Description("Verifies that toggling from hide to highlight and back works")]
+		public void TestQuickFilterChain_ToggleHideHighlightHide()
+		{
+			var settings = CreateDataSource();
+			var logFile = new InMemoryLogSource();
+			logFile.AddEntry("Hello registered world", LevelFlags.Info);
+			logFile.AddEntry("Some other line", LevelFlags.Info);
+			logFile.AddEntry("Another registered entry", LevelFlags.Info);
+			logFile.AddEntry("Not matching", LevelFlags.Info);
+			using (var dataSource = new FileDataSource(_scheduler, settings, logFile, TimeSpan.Zero))
+			{
+				_scheduler.Run(3);
+				dataSource.FilteredLogSource.GetProperty(Properties.LogEntryCount).Should().Be(4);
+
+				// Step 1: Enable hide-mode filter
+				var filter = Filter.Create("registered", FilterMatchType.SubstringFilter, true, false);
+				dataSource.QuickFilterChain = new List<ILogEntryFilter> { filter };
+				_scheduler.Run(10);
+				dataSource.FilteredLogSource.GetProperty(Properties.LogEntryCount).Should().Be(2,
+					"because hide-mode filter should hide non-matching entries");
+
+				// Step 2: Switch to highlight mode (remove from filter chain)
+				dataSource.QuickFilterChain = null;
+				_scheduler.Run(10);
+				dataSource.FilteredLogSource.GetProperty(Properties.LogEntryCount).Should().Be(4,
+					"because highlight mode means no filtering, all entries visible");
+
+				// Step 3: Switch back to hide mode
+				var filter2 = Filter.Create("registered", FilterMatchType.SubstringFilter, true, false);
+				dataSource.QuickFilterChain = new List<ILogEntryFilter> { filter2 };
+				_scheduler.Run(10);
+				dataSource.FilteredLogSource.GetProperty(Properties.LogEntryCount).Should().Be(2,
+					"because switching back to hide mode should filter again");
+			}
+		}
+
+		[Test]
+		[Description("Verifies that hide-mode filtering works for plain text entries without log levels (the root cause bug scenario)")]
+		public void TestQuickFilterChain_HideMode_NoLogLevels()
+		{
+			var settings = CreateDataSource();
+			// Plain text entries WITHOUT log levels — MultiLineLogSource will group these into one entry
+			var logFile = new InMemoryLogSource();
+			logFile.AddEntry("Hello registered world", LevelFlags.None);
+			logFile.AddEntry("Some other line", LevelFlags.None);
+			logFile.AddEntry("Another registered entry", LevelFlags.None);
+			logFile.AddEntry("Not matching", LevelFlags.None);
+			using (var dataSource = new FileDataSource(_scheduler, settings, logFile, TimeSpan.Zero))
+			{
+				_scheduler.Run(10);
+				dataSource.FilteredLogSource.GetProperty(Properties.LogEntryCount).Should().Be(4,
+					"because no filter is set yet");
+
+				// Set a filter chain (simulating "Hide non-matching lines" mode)
+				var filter = Filter.Create("registered", FilterMatchType.SubstringFilter, true, false);
+				dataSource.QuickFilterChain = new List<ILogEntryFilter> { filter };
+				_scheduler.Run(100);
+
+				dataSource.FilteredLogSource.GetProperty(Properties.LogEntryCount).Should().Be(2,
+					"because the line-level filter should hide non-matching lines even when MultiLineLogSource groups them into one entry");
+			}
+		}
+
 		private DataSource CreateDataSource()
 		{
 			return new DataSource("ffff") {Id = DataSourceId.CreateNew()};

@@ -283,5 +283,60 @@ namespace Tailviewer.Tests.Ui
 			model.QuickFilters.ElementAt(1).IsActive = false;
 			model.QuickInfo.Should().BeNull();
 		}
+
+	[Test]
+	[Description("Verifies that hide-mode filters are included in the filter chain and highlight-only filters are excluded")]
+	public void TestCreateFilterChainRespectsIsHighlightOnly()
+	{
+		var dataSource = new FileDataSource(_logSourceFactory, _scheduler,
+			new DataSource("test") {Id = DataSourceId.CreateNew()});
+		var model = new QuickFiltersSidePanelViewModel(_settings, _quickFilters);
+
+		var hideFilter = model.AddQuickFilter();
+		hideFilter.CurrentDataSource = dataSource;
+		hideFilter.Value = "error";
+		hideFilter.IsActive = true;
+		hideFilter.IsHighlightOnly = false;
+
+		var highlightFilter = model.AddQuickFilter();
+		highlightFilter.CurrentDataSource = dataSource;
+		highlightFilter.Value = "warning";
+		highlightFilter.IsActive = true;
+		highlightFilter.IsHighlightOnly = true;
+
+		var chain = model.CreateFilterChain();
+		chain.Should().NotBeNull("because there is one active hide-mode filter");
+		chain.Should().HaveCount(1, "because only the hide-mode filter should be in the chain");
+	}
+
+	[Test]
+	[Description("Verifies that setting IsHighlightOnly on one filter does not affect another filter's IsHighlightOnly value")]
+	public void TestIsHighlightOnlyIsIndependentPerFilter()
+	{
+		var dataSource = new FileDataSource(_logSourceFactory, _scheduler,
+			new DataSource("test2") {Id = DataSourceId.CreateNew()});
+		var model = new QuickFiltersSidePanelViewModel(_settings, _quickFilters);
+
+		var filter1 = model.AddQuickFilter();
+		filter1.CurrentDataSource = dataSource;
+		filter1.Value = "error";
+		filter1.IsActive = true;
+		filter1.IsHighlightOnly = false;
+
+		var filter2 = model.AddQuickFilter();
+		filter2.CurrentDataSource = dataSource;
+		filter2.Value = "warning";
+		filter2.IsActive = true;
+		filter2.IsHighlightOnly = false;
+
+		// Changing filter2 to highlight-only should NOT affect filter1
+		filter2.IsHighlightOnly = true;
+
+		filter1.IsHighlightOnly.Should().BeFalse("because changing filter2's IsHighlightOnly must not affect filter1");
+
+		var chain = model.CreateFilterChain();
+		chain.Should().NotBeNull("because filter1 is still in hide mode");
+		chain.Should().HaveCount(1, "because only filter1 should be in the chain");
+	}
 	}
 }
