@@ -1,19 +1,24 @@
-﻿<metrolib:ChromelessWindow x:Class="Tailviewer.Ui.MainWindow"
-                           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                           xmlns:metrolib="clr-namespace:Metrolib.Controls;assembly=Metrolib"
-                           xmlns:actionCenter="clr-namespace:Tailviewer.Ui.ActionCenter"
-                           xmlns:ui="clr-namespace:Tailviewer.Ui"
-                           mc:Ignorable="d"
-                           d:DataContext="{d:DesignInstance ui:MainWindowViewModel}"
-                           Title="{Binding WindowTitle}"
-                           x:Name="This"
-                           AllowDrop="True"
-                           MinWidth="1024"
-                           MinHeight="600"
-                           HideTitle="True">
+﻿<Window x:Class="Tailviewer.Ui.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:actionCenter="clr-namespace:Tailviewer.Ui.ActionCenter"
+        xmlns:ui="clr-namespace:Tailviewer.Ui"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance ui:MainWindowViewModel}"
+        Title="{Binding WindowTitle}"
+        x:Name="This"
+        AllowDrop="True"
+        MinWidth="1024"
+        MinHeight="600"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        WindowStyle="None"
+        ResizeMode="CanResize">
 
     <Window.InputBindings>
         <KeyBinding Modifiers="Control" Key="F"
@@ -60,184 +65,226 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <Window.Background>
-        <!--<StaticResource ResourceKey="TitleBarBrush" />-->
-        <StaticResource ResourceKey="SecondaryBrush" />
-    </Window.Background>
+    <Grid Background="{DynamicResource MaterialDesignPaper}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
 
-    <metrolib:ChromelessWindow.Header>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="32" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            <!-- Custom Title Bar -->
+            <Grid Grid.Row="0" 
+                  Background="{StaticResource PrimaryBrush}"
+                  MouseLeftButtonDown="TitleBar_MouseLeftButtonDown"
+                  Height="40">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <Image Source="pack://application:,,,/Resources/Tailviewer.png"
-                   Margin="4,0,4,0"
-                   Height="32"
-                   IsHitTestVisible="False"
-                   RenderOptions.BitmapScalingMode="HighQuality"
-                   VerticalAlignment="Center" />
-
-            <Menu Grid.Column="1"
-                  Background="Transparent">
-                <MenuItem Header="_File"
-                          Style="{StaticResource MainMenuItemStyle}"
-                          ItemsSource="{Binding MainMenu.File.Items}" />
-                <MenuItem Header="_Edit"
-                          Style="{StaticResource MainMenuItemStyle}"
-                          Visibility="{Binding MainMenu.Edit.HasItems, Converter={StaticResource BoolFalseToCollapsedConverter}}"
-                          ItemsSource="{Binding MainMenu.Edit.Items}" />
-                <MenuItem Header="_View"
-                          Style="{StaticResource MainMenuItemStyle}"
-                          Visibility="{Binding MainMenu.Edit.HasItems, Converter={StaticResource BoolFalseToCollapsedConverter}}"
-                          ItemsSource="{Binding MainMenu.View.Items}" />
-                <MenuItem Header="_Help"
-                          Style="{StaticResource MainMenuItemStyle}"
-                          ItemsSource="{Binding MainMenu.Help.Items}" />
-            </Menu>
-
-            <metrolib:SearchTextBox x:Name="PartSearchBox"
-                                    Grid.Column="2"
-                                    Margin="8,2,8,2"
-                                    Padding="2"
-                                    VerticalAlignment="Center"
-                                    Height="24"
-                                    Width="200"
-                                    RequiresExplicitSearchStart="False"
-                                    AcceptsTab="True"
-                                    Visibility="{Binding LogViewPanel.CurrentDataSource, Converter={StaticResource NullToCollapsedConverter}}"
-                                    Text="{Binding LogViewPanel.Search.Term, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                    OccurenceCount="{Binding LogViewPanel.Search.ResultCount}"
-                                    CurrentOccurenceIndex="{Binding LogViewPanel.Search.CurrentResultIndex, Mode=TwoWay}"
-                                    Watermark="Search log file (Ctrl+F)" />
-
-            <metrolib:FilterTextBox x:Name="PartFindAllBox"
-                                    Grid.Column="3"
-                                    Margin="0,2,8,2"
-                                    Padding="2"
-                                    VerticalAlignment="Center"
-                                    Height="24"
-                                    Width="200"
-                                    AcceptsTab="True"
-                                    Visibility="{Binding LogViewPanel.CurrentDataSource, Converter={StaticResource NullToCollapsedConverter}}"
-                                    FilterText="{Binding LogViewPanel.FindAll.SearchTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                    Watermark="Find all in log file (Ctrl+Shift+F)" />
-
-            <TextBlock Grid.Column="4"
-                       Margin="8,0,0,0"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Left"
+                <Image Source="pack://application:,,,/Resources/Tailviewer.png"
+                       Margin="4,0,4,0"
+                       Height="32"
                        IsHitTestVisible="False"
-                       FontSize="12"
-                       Foreground="{StaticResource PrimaryForegroundBrush}"
-                       Text="{Binding WindowTitleSuffix}" />
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                       VerticalAlignment="Center" />
 
-            <metrolib:EmailToggleButton Grid.Column="5"
-                                        VerticalContentAlignment="Top"
-                                        HorizontalContentAlignment="Right"
-                                        IsChecked="{Binding ActionCenter.IsOpen}"
-                                        Foreground="{StaticResource ForegroundBrushInverted}"
-                                        HoveredBackground="{StaticResource ForegroundBrushHovered}"
-                                        CheckedBackground="{StaticResource ForegroundBrushHovered}"
-                                        Width="30"
-                                        Margin="4,0,4,0"
-                                        Padding="4">
-                <metrolib:EmailToggleButton.ContextMenu>
-                    <metrolib:FlatContextMenu AnchorAlignment="Right"
-                                              HorizontalOffset="-236"
-                                              Placement="Bottom"
-                                              IsFirstItemHovered="True"
-                                              VerticalOffset="-2">
-                        <metrolib:MenuItemContentControl Padding="0">
-                            <actionCenter:ActionCenterControl x:Name="PartActionCenter"
-                                                              DataContext="{Binding ActionCenter}"
-                                                              Width="260"
-                                                              VerticalAlignment="Stretch"
-                                                              HorizontalAlignment="Right" />
-                        </metrolib:MenuItemContentControl>
-                    </metrolib:FlatContextMenu>
-                </metrolib:EmailToggleButton.ContextMenu>
-                <metrolib:NotificationBadge>
-                    <TextBlock Text="{Binding ActionCenter.UnreadCount}" FontSize="8" />
-                </metrolib:NotificationBadge>
-            </metrolib:EmailToggleButton>
-        </Grid>
-    </metrolib:ChromelessWindow.Header>
+                <Menu Grid.Column="1"
+                      Background="Transparent">
+                    <MenuItem Header="_File"
+                              Style="{StaticResource MainMenuItemStyle}"
+                              ItemsSource="{Binding MainMenu.File.Items}" />
+                    <MenuItem Header="_Edit"
+                              Style="{StaticResource MainMenuItemStyle}"
+                              Visibility="{Binding MainMenu.Edit.HasItems, Converter={StaticResource BoolFalseToCollapsedConverter}}"
+                              ItemsSource="{Binding MainMenu.Edit.Items}" />
+                    <MenuItem Header="_View"
+                              Style="{StaticResource MainMenuItemStyle}"
+                              Visibility="{Binding MainMenu.Edit.HasItems, Converter={StaticResource BoolFalseToCollapsedConverter}}"
+                              ItemsSource="{Binding MainMenu.View.Items}" />
+                    <MenuItem Header="_Help"
+                              Style="{StaticResource MainMenuItemStyle}"
+                              ItemsSource="{Binding MainMenu.Help.Items}" />
+                </Menu>
 
-    <AdornerDecorator x:Name="PartDragDecorator"
-                      SnapsToDevicePixels="True">
-        <Grid>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
+                <!-- Search TextBox (replaces metrolib:SearchTextBox) -->
+                <TextBox x:Name="PartSearchBox"
+                         Grid.Column="2"
+                         Margin="8,2,8,2"
+                         Padding="2"
+                         VerticalAlignment="Center"
+                         Height="24"
+                         Width="200"
+                         Visibility="{Binding LogViewPanel.CurrentDataSource, Converter={StaticResource NullToCollapsedConverter}}"
+                         Text="{Binding LogViewPanel.Search.Term, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         materialDesign:HintAssist.Hint="Search log file (Ctrl+F)" />
 
-                <Grid Grid.Row="0"
-                      Height="1"
-                      Background="{StaticResource PrimarySeparatorBrush}" />
+                <!-- Filter TextBox (replaces metrolib:FilterTextBox) -->
+                <TextBox x:Name="PartFindAllBox"
+                         Grid.Column="3"
+                         Margin="0,2,8,2"
+                         Padding="2"
+                         VerticalAlignment="Center"
+                         Height="24"
+                         Width="200"
+                         Visibility="{Binding LogViewPanel.CurrentDataSource, Converter={StaticResource NullToCollapsedConverter}}"
+                         Text="{Binding LogViewPanel.FindAll.SearchTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         materialDesign:HintAssist.Hint="Find all in log file (Ctrl+Shift+F)" />
 
-                <ui:AutoUpdateControl Grid.Row="1"
-                                      DataContext="{Binding AutoUpdater}"
-                                      Visibility="{Binding ShowUpdateAvailable, Converter={StaticResource BoolFalseToCollapsedConverter}}" />
+                <TextBlock Grid.Column="4"
+                           Margin="8,0,0,0"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"
+                           IsHitTestVisible="False"
+                           FontSize="12"
+                           Foreground="{StaticResource PrimaryForegroundBrush}"
+                           Text="{Binding WindowTitleSuffix}" />
 
-                <ContentPresenter Grid.Row="2"
-                                  Content="{Binding LogViewPanel}"
-                                  x:Name="PartContent" />
-
-                <!-- Overlay to darken the main window content to show that a flyout (a popup) is laid over the window-->
-                <Grid Grid.Row="2"
-                      Visibility="{Binding CurrentFlyout, Converter={StaticResource NullToCollapsedConverter}}">
-                    <Rectangle Fill="{StaticResource OverlayBackgroundBrush}"
-                               MouseDown="OnClickOverlay"
-                               Visibility="{Binding IsChecked, ElementName=DataSourceToggleButton, Converter={StaticResource BoolFalseToCollapsedConverter}}" />
-                </Grid>
-
-                <!-- Application wide flyout (popup) which shows content which is not regularly needed (settings, plugins, about, etc...) -->
-                <Grid Grid.Row="2"
-                      Visibility="{Binding CurrentFlyout, Converter={StaticResource NullToCollapsedConverter}}"
-                      Background="{StaticResource PrimaryForegroundBrush}"
-                      Margin="200, 100, 200, 100">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0"
-                                   VerticalAlignment="Center"
-                                   HorizontalAlignment="Center"
-                                   Text="{Binding CurrentFlyout.Name}"
-                                   FontSize="32" />
-
-                        <metrolib:CloseButton Grid.Column="1"
-                                              Click="OnCloseFlyout"/>
+                <!-- Action Center Button (replaces EmailToggleButton + NotificationBadge) -->
+                <Button Grid.Column="5"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Width="30"
+                        Height="30"
+                        Margin="4,0,4,0"
+                        Padding="4"
+                        Click="ActionCenterButton_Click">
+                    <Grid>
+                        <iconPacks:PackIconMaterial Kind="Email" 
+                                                   Width="20" 
+                                                   Height="20"
+                                                   Foreground="{StaticResource ForegroundBrushInverted}" />
+                        <materialDesign:Badged Badge="{Binding ActionCenter.UnreadCount}"
+                                              BadgeColorZoneMode="PrimaryMid"
+                                              Visibility="{Binding ActionCenter.UnreadCount, Converter={StaticResource NullToCollapsedConverter}}"
+                                              HorizontalAlignment="Right"
+                                              VerticalAlignment="Top" />
                     </Grid>
+                    <Button.ContextMenu>
+                        <ContextMenu Placement="Bottom"
+                                    HorizontalOffset="-236"
+                                    VerticalOffset="-2">
+                            <MenuItem Padding="0">
+                                <actionCenter:ActionCenterControl x:Name="PartActionCenter"
+                                                                  DataContext="{Binding ActionCenter}"
+                                                                  Width="260"
+                                                                  VerticalAlignment="Stretch"
+                                                                  HorizontalAlignment="Right" />
+                            </MenuItem>
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                </Button>
 
-                    <Rectangle Grid.Row="1"
-                               Fill="Gray"
-                               Height="1"
-                               Margin="8" />
-
-                    <ContentPresenter Grid.Row="2"
-                                      Content="{Binding CurrentFlyout}"
-                                      Margin="16"
-                                      x:Name="PartFlyout" />
-                </Grid>
-
+                <!-- Window Control Buttons -->
+                <StackPanel Grid.Column="6" 
+                           Orientation="Horizontal"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Top">
+                    <Button 
+                            Width="46"
+                            Height="32"
+                            Padding="0"
+                            Click="MinimizeButton_Click"
+                            Foreground="{StaticResource ForegroundBrushInverted}">
+                        <iconPacks:PackIconMaterial Kind="WindowMinimize" Width="16" Height="16" />
+                    </Button>
+                    <Button 
+                            Width="46"
+                            Height="32"
+                            Padding="0"
+                            Click="MaximizeRestoreButton_Click"
+                            Foreground="{StaticResource ForegroundBrushInverted}">
+                        <iconPacks:PackIconMaterial Kind="WindowMaximize" Width="16" Height="16" x:Name="MaximizeIcon" />
+                    </Button>
+                    <Button 
+                            Width="46"
+                            Height="32"
+                            Padding="0"
+                            Click="CloseButton_Click"
+                            Foreground="{StaticResource ForegroundBrushInverted}">
+                        <iconPacks:PackIconMaterial Kind="Close" Width="16" Height="16" />
+                    </Button>
+                </StackPanel>
             </Grid>
-        </Grid>
-    </AdornerDecorator>
 
-</metrolib:ChromelessWindow>
+            <!-- Main Content Area -->
+            <AdornerDecorator x:Name="PartDragDecorator"
+                              Grid.Row="1"
+                              SnapsToDevicePixels="True">
+                <Grid Background="{DynamicResource MaterialDesignPaper}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0"
+                              Height="1"
+                              Background="{StaticResource PrimarySeparatorBrush}" />
+
+                        <ui:AutoUpdateControl Grid.Row="1"
+                                              DataContext="{Binding AutoUpdater}"
+                                              Visibility="{Binding ShowUpdateAvailable, Converter={StaticResource BoolFalseToCollapsedConverter}}" />
+
+                        <ContentPresenter Grid.Row="2"
+                                          Content="{Binding LogViewPanel}"
+                                          x:Name="PartContent" />
+
+                        <!-- Overlay to darken the main window content to show that a flyout (a popup) is laid over the window-->
+                        <Grid Grid.Row="2"
+                              Visibility="{Binding CurrentFlyout, Converter={StaticResource NullToCollapsedConverter}}">
+                            <Rectangle Fill="{StaticResource OverlayBackgroundBrush}"
+                                       MouseDown="OnClickOverlay"
+                                       Visibility="{Binding IsChecked, ElementName=DataSourceToggleButton, Converter={StaticResource BoolFalseToCollapsedConverter}}" />
+                        </Grid>
+
+                        <!-- Application wide flyout (popup) which shows content which is not regularly needed (settings, plugins, about, etc...) -->
+                        <Grid Grid.Row="2"
+                              Visibility="{Binding CurrentFlyout, Converter={StaticResource NullToCollapsedConverter}}"
+                              Background="{StaticResource PrimaryForegroundBrush}"
+                              Margin="200, 100, 200, 100">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           Text="{Binding CurrentFlyout.Name}"
+                                           FontSize="32" />
+
+                                <Button Grid.Column="1"
+                                        Click="OnCloseFlyout">
+                                    <iconPacks:PackIconMaterial Kind="Close" Width="24" Height="24" />
+                                </Button>
+                            </Grid>
+
+                            <Rectangle Grid.Row="1"
+                                       Fill="Gray"
+                                       Height="1"
+                                       Margin="8" />
+
+                            <ContentPresenter Grid.Row="2"
+                                              Content="{Binding CurrentFlyout}"
+                                              Margin="16"
+                                              x:Name="PartFlyout" />
+                        </Grid>
+
+                    </Grid>
+                </Grid>
+            </AdornerDecorator>
+        </Grid>
+
+</Window>

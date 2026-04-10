@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using Metrolib.Controls;
+using System.Windows.Controls.Primitives;
 
 namespace Tailviewer.Ui.DataSourceTree
 {
@@ -7,7 +7,7 @@ namespace Tailviewer.Ui.DataSourceTree
 	///     The button with which the user toggles the visibility of the <see cref="DataSourcesControl" />.
 	/// </summary>
 	public sealed class DataSourcesToggleButton
-		: FlatToggleButton
+		: ToggleButton
 	{
 		static DataSourcesToggleButton()
 		{

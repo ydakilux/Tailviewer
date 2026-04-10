@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using log4net;
-using Metrolib;
 using Tailviewer.BusinessLogic.ActionCenter;
 
 namespace Tailviewer.Ui.ActionCenter

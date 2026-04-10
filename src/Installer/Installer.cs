@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Threading;
 using Installer.Applications.Install;
 using Installer.Exceptions;
-using IWshRuntimeLibrary;
 using log4net;
 using Metrolib;
 using Microsoft.Win32;
@@ -356,13 +355,14 @@ namespace Installer
 		{
 			if (!Directory.Exists(ShortcutFolder))
 				Directory.CreateDirectory(ShortcutFolder);
-			var shell = new WshShell();
-			var shortcut = (IWshShortcut) shell.CreateShortcut(TailviewerLink);
-			shortcut.TargetPath = Path.Combine(_installationPath, "Tailviewer.exe");
-			shortcut.IconLocation = IconPath;
-			shortcut.Arguments = "";
-			shortcut.Description = "Open & Free log file viewer";
-			shortcut.Save();
+			
+			ShortcutHelper.CreateShortcut(
+				TailviewerLink,
+				Path.Combine(_installationPath, "Tailviewer.exe"),
+				IconPath,
+				"",
+				"Open & Free log file viewer"
+			);
 		}
 
 		private void DeleteStartMenuEntry()

@@ -1,15 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:controls="clr-namespace:Metrolib.Controls;assembly=Metrolib"
-                    xmlns:converters="clr-namespace:Metrolib.Converters;assembly=Metrolib"
                     xmlns:dataSourceTree="clr-namespace:Tailviewer.Ui.DataSourceTree">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Tailviewer;component/Themes/Constants.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Tailviewer;component/Themes/Converters.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Tailviewer;component/Ui/Menu/MenuItemTemplates.xaml" />
     </ResourceDictionary.MergedDictionaries>
-
-    <converters:BoolFalseToCollapsedConverter x:Key="BoolFalseToCollapsedConverter" />
 
     <HierarchicalDataTemplate DataType="{x:Type dataSourceTree:FolderDataSourceViewModel}"
                               ItemsSource="{Binding Observable}">
@@ -42,36 +39,43 @@
                 </Grid.RowDefinitions>
 
                 <!-- Name -->
-                <controls:FlatTextBlock Text="{Binding DisplayName}" />
+                <TextBlock Text="{Binding DisplayName}" />
 
                 <!-- Folder -->
-                <controls:FlatTextBlock Text="{Binding DataSourceOrigin}"
-                                        Foreground="{StaticResource TextBrushUnimportant}"
-                                        ToolTip="{Binding DataSourceOrigin}"
-                                        TextTrimming="CharacterEllipsis"
-                                        Grid.Row="1" />
+                <TextBlock Text="{Binding DataSourceOrigin}"
+                           Foreground="{StaticResource TextBrushUnimportant}"
+                           ToolTip="{Binding DataSourceOrigin}"
+                           TextTrimming="CharacterEllipsis"
+                           Grid.Row="1" />
 
-                <controls:FlatTextBlock Foreground="{StaticResource TextBrushUnimportant}"
-                                        Text="{Binding FileReport}"
-                                        TextWrapping="Wrap"
-                                        Grid.Row="2" />
+                <TextBlock Foreground="{StaticResource TextBrushUnimportant}"
+                           Text="{Binding FileReport}"
+                           TextWrapping="Wrap"
+                           Grid.Row="2" />
 
             </Grid>
 
-            <controls:EditToggleButton
+            <ToggleButton
                 SnapsToDevicePixels="True"
                 x:Name="PART_EditToggleButton"
                 Grid.Row="0"
                 Grid.Column="2"
                 VerticalAlignment="Stretch"
-                IsChecked="{Binding IsEditing, Mode=TwoWay}" />
+                IsChecked="{Binding IsEditing, Mode=TwoWay}"
+                Width="24" Height="24" Padding="0" BorderThickness="0" Background="Transparent"
+                ToolTip="Edit">
+                <TextBlock Text="✎" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </ToggleButton>
 
-            <controls:CloseButton VerticalAlignment="Stretch"
-                                  HorizontalAlignment="Right"
-                                  Command="{Binding RemoveCommand}"
-                                  ToolTip="Close this file"
-                                  Grid.Row="0"
-                                  Grid.Column="3" />
+            <Button VerticalAlignment="Stretch"
+                    HorizontalAlignment="Right"
+                    Command="{Binding RemoveCommand}"
+                    ToolTip="Close this file"
+                    Grid.Row="0"
+                    Grid.Column="3"
+                    Width="20" Height="20" Padding="0" BorderThickness="0" Background="Transparent">
+                <TextBlock Text="✕" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Button>
 
             <Grid Grid.Row="1"
                   Grid.Column="0"
@@ -87,31 +91,30 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <controls:FlatTextBlock Text="Path"
-                                        Margin="0,6,6,6"
-                                        VerticalAlignment="Center" />
-                <controls:PathChooserTextBox Grid.Row="0"
-                                             Grid.Column="1"
-                                             Margin="0,6,6,6"
-                                             Text="{Binding FolderPath, UpdateSourceTrigger=PropertyChanged}"
-                                             PathChooserCommand="{Binding ChooseFolderCommand}" />
+                <TextBlock Text="Path"
+                           Margin="0,6,6,6"
+                           VerticalAlignment="Center" />
+                <TextBox Grid.Row="0"
+                         Grid.Column="1"
+                         Margin="0,6,6,6"
+                         Text="{Binding FolderPath, UpdateSourceTrigger=PropertyChanged}" />
 
                 <CheckBox Grid.Row="1"
                           Grid.Column="1"
                           Margin="0,6,6,6"
                           IsChecked="{Binding Recursive, Mode=TwoWay}">
-                    <controls:FlatTextBlock Text="Recursive" />
+                    <TextBlock Text="Recursive" />
                 </CheckBox>
 
-                <controls:FlatTextBlock Grid.Row="2"
-                                        Grid.Column="0"
-                                        Margin="0,6,6,6"
-                                        VerticalAlignment="Center"
-                                        Text="Filter" />
-                <controls:EditorTextBox Grid.Row="2"
-                                        Grid.Column="1"
-                                        Margin="0,6,6,6"
-                                        Text="{Binding SearchPattern, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Grid.Row="2"
+                           Grid.Column="0"
+                           Margin="0,6,6,6"
+                           VerticalAlignment="Center"
+                           Text="Filter" />
+                <TextBox Grid.Row="2"
+                         Grid.Column="1"
+                         Margin="0,6,6,6"
+                         Text="{Binding SearchPattern, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
 
             <TextBlock Grid.Row="2"

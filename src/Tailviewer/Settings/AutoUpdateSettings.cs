@@ -9,7 +9,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 using log4net;
-using Metrolib;
+using Tailviewer.Core;
 
 namespace Tailviewer.Settings
 {

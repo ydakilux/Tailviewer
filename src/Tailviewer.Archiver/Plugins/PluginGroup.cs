@@ -456,10 +456,13 @@ namespace Tailviewer.Archiver.Plugins
 			return image;
 		}
 
-		public Assembly LoadAssembly(string argsName)
-		{
-			var assembly = _selectedPluginArchive.LoadAssembly(argsName);
-			return assembly;
-		}
+	public Assembly LoadAssembly(string argsName)
+	{
+		if (_selectedPluginArchive == null)
+			return null;
+
+		var assembly = _selectedPluginArchive.LoadAssembly(argsName);
+		return assembly;
+	}
 	}
 }

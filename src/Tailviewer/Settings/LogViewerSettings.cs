@@ -1,5 +1,4 @@
 ﻿using log4net;
-using Metrolib;
 using System;
 using System.Diagnostics.Contracts;
 using System.Reflection;

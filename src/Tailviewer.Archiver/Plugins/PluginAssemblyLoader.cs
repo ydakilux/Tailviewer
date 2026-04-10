@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Threading;
 using log4net;
-using Metrolib;
 using Tailviewer.Api;
 using Tailviewer.Archiver.Plugins.Description;
 using Tailviewer.Core;
@@ -215,7 +214,6 @@ namespace Tailviewer.Archiver.Plugins
 			var assemblies = new Dictionary<string, Assembly>
 			{
 				{"log4net,", typeof(ILog).Assembly},
-				{"Metrolib,", typeof(AbstractBootstrapper).Assembly},
 				{"System.Threading.Extensions,", typeof(ITaskScheduler).Assembly},
 				{"Tailviewer.Api,", typeof(ILogSource).Assembly},
 				{"Tailviewer.Core,", typeof(ServiceContainer).Assembly}

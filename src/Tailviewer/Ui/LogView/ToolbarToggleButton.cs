@@ -1,18 +1,18 @@
 ﻿using System.Windows;
-using System.Windows.Media;
-using Metrolib.Controls;
+using System.Windows.Controls.Primitives;
+using MahApps.Metro.IconPacks;
 
 namespace Tailviewer.Ui.LogView
 {
 	public class ToolbarToggleButton
-		: FlatToggleButton
+		: ToggleButton
 	{
 		public static readonly DependencyProperty CheckedIconProperty =
-			DependencyProperty.Register("CheckedIcon", typeof(Geometry), typeof(ToolbarToggleButton),
-			                            new PropertyMetadata(default(Geometry)));
+			DependencyProperty.Register("CheckedIcon", typeof(PackIconMaterialKind), typeof(ToolbarToggleButton),
+			                            new PropertyMetadata(PackIconMaterialKind.None));
 
 		public static readonly DependencyProperty UncheckedIconProperty = DependencyProperty.Register(
-		 "UncheckedIcon", typeof(Geometry), typeof(ToolbarToggleButton), new PropertyMetadata(default(Geometry)));
+		 "UncheckedIcon", typeof(PackIconMaterialKind), typeof(ToolbarToggleButton), new PropertyMetadata(PackIconMaterialKind.None));
 
 		static ToolbarToggleButton()
 		{
@@ -20,16 +20,16 @@ namespace Tailviewer.Ui.LogView
 			                                         new FrameworkPropertyMetadata(typeof(ToolbarToggleButton)));
 		}
 
-		public Geometry UncheckedIcon
+		public PackIconMaterialKind UncheckedIcon
 		{
-			get { return (Geometry) GetValue(UncheckedIconProperty); }
+			get { return (PackIconMaterialKind) GetValue(UncheckedIconProperty); }
 			set { SetValue(UncheckedIconProperty, value); }
 		}
 
-		public Geometry CheckedIcon
+		public PackIconMaterialKind CheckedIcon
 
 		{
-			get { return (Geometry) GetValue(CheckedIconProperty); }
+			get { return (PackIconMaterialKind) GetValue(CheckedIconProperty); }
 			set { SetValue(CheckedIconProperty, value); }
 		}
 	}

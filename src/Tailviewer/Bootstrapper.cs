@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using Metrolib;
 using log4net;
 using log4net.Appender;
 using log4net.Core;
@@ -12,7 +11,6 @@ using Tailviewer.Ui.LogView;
 namespace Tailviewer
 {
 	public class Bootstrapper
-		: AbstractBootstrapper
 	{
 		private static bool AllowMultipleInstance()
 		{

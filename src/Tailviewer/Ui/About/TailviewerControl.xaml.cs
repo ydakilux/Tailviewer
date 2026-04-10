@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System.Diagnostics;
+using System.Windows.Controls;
+using System.Windows.Navigation;
 
 namespace Tailviewer.Ui.About
 {
@@ -10,6 +12,12 @@ namespace Tailviewer.Ui.About
 		public TailviewerControl()
 		{
 			InitializeComponent();
+		}
+
+		private void OnRequestNavigate(object sender, RequestNavigateEventArgs e)
+		{
+			Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
+			e.Handled = true;
 		}
 	}
 }

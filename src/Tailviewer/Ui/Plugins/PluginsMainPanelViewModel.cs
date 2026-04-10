@@ -7,7 +7,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Metrolib;
 using Tailviewer.Archiver.Plugins.Description;
 using Tailviewer.Archiver.Repository;
 using Tailviewer.BusinessLogic.Plugins;
@@ -27,9 +26,9 @@ namespace Tailviewer.Ui.Plugins
 		private readonly IPluginUpdater _pluginUpdater;
 		private readonly IReadOnlyList<IPluginViewModel> _installedPlugins;
 		private readonly ObservableCollection<IPluginViewModel> _allPlugins;
-		private readonly DelegateCommand2 _openPluginFolderCommand;
-		private readonly DelegateCommand2 _updatePluginsCommand;
-		private readonly DelegateCommand2 _refreshPluginsCommand;
+		private readonly DelegateCommand _openPluginFolderCommand;
+		private readonly DelegateCommand _updatePluginsCommand;
+		private readonly DelegateCommand _refreshPluginsCommand;
 		private bool _isRefreshingPlugins;
 		private string _showAllPluginsError;
 		private string _showAllPluginsErrorDescription;
@@ -45,9 +44,9 @@ namespace Tailviewer.Ui.Plugins
 			_pluginUpdater = pluginUpdater;
 			_installedPlugins = plugins.Select(x => new InstalledPluginViewModel(x)).ToList();
 			_allPlugins = new ObservableCollection<IPluginViewModel>();
-			_openPluginFolderCommand = new DelegateCommand2(OpenPluginFolder);
-			_updatePluginsCommand = new DelegateCommand2(UpdatePlugins);
-			_refreshPluginsCommand = new DelegateCommand2(RefreshPlugins);
+			_openPluginFolderCommand = new DelegateCommand(OpenPluginFolder);
+			_updatePluginsCommand = new DelegateCommand(UpdatePlugins);
+			_refreshPluginsCommand = new DelegateCommand(RefreshPlugins);
 
 			if (!HasPluginRepositoryConfigured)
 			{

@@ -6,8 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using log4net;
-using Metrolib;
-using Metrolib.Controls;
 using Tailviewer.Api;
 using Tailviewer.BusinessLogic.ActionCenter;
 using Tailviewer.BusinessLogic.DataSources;
@@ -48,7 +46,7 @@ namespace Tailviewer.Ui.DataSourceTree
 
 			AddFileMenuItems(new []
 			{
-				new CommandMenuViewModel(new DelegateCommand2(OpenInExplorer))
+				new CommandMenuViewModel(new DelegateCommand(OpenInExplorer))
 				{
 					Header = "Open Containing Folder(s)",
 					ToolTip = "Opens the Folder(s) of the Child Data sources"

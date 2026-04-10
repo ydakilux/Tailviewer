@@ -3,9 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:controls="clr-namespace:Metrolib.Controls;assembly=Metrolib"
-             xmlns:converters="clr-namespace:Metrolib.Converters;assembly=Metrolib"
-             xmlns:tab="clr-namespace:Metrolib.Controls.Tab;assembly=Metrolib"
+             xmlns:converters="clr-namespace:Tailviewer.Ui.Converters"
              xmlns:timeFilter="clr-namespace:Tailviewer.Ui.SidePanel.QuickFilters.TimeFilter"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
@@ -14,88 +12,158 @@
     <UserControl.Resources>
         <converters:BoolFalseToCollapsedConverter x:Key="BoolFalseToCollapsedConverter" />
         <converters:BoolTrueToHiddenConverter x:Key="BoolTrueToHiddenConverter" />
+        
+        <!-- Pill-style toggle button for time filters -->
+        <Style x:Key="PillToggleButton" TargetType="RadioButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Border"
+                                Background="#E0E0E0"
+                                BorderBrush="Transparent"
+                                BorderThickness="1"
+                                CornerRadius="14"
+                                Padding="14,6"
+                                Margin="2,0">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            TextElement.Foreground="#333333"
+                                            TextElement.FontSize="12"
+                                            TextElement.FontWeight="Medium"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#2196F3" />
+                                <Setter TargetName="Border" Property="TextElement.Foreground" Value="White" />
+                            </Trigger>
+                            <!-- Hover effect for unchecked state -->
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="IsChecked" Value="False"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="Border" Property="Background" Value="#D0D0D0"/>
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="IsChecked" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="Border" Property="Background" Value="#1E88E5"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <controls:FlatToggleButton x:Name="PART_TimeFilterToggle"
-                                   HorizontalContentAlignment="Left">
+
+        <!-- Time Filter Mode Pills -->
+        <Border Background="#F5F5F5" Padding="8,8" Margin="0,4,0,0">
+            <StackPanel>
+                <TextBlock Text="Time Range:" 
+                           FontSize="11" 
+                           Foreground="#666666" 
+                           Margin="0,0,0,6"
+                           FontWeight="Medium"/>
+                
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <RadioButton Style="{StaticResource PillToggleButton}"
+                                 Content="Everything"
+                                 GroupName="TimeFilter"
+                                 IsChecked="{Binding SelectEverything, Mode=TwoWay}"
+                                 ToolTip="Show all log entries regardless of time"/>
+                    
+                    <RadioButton Style="{StaticResource PillToggleButton}"
+                                 Content="Quick"
+                                 GroupName="TimeFilter"
+                                 IsChecked="{Binding SelectBySpecialInterval, Mode=TwoWay}"
+                                 ToolTip="Filter by common time ranges (today, this week, etc.)"/>
+                    
+                    <RadioButton Style="{StaticResource PillToggleButton}"
+                                 Content="Absolute"
+                                 GroupName="TimeFilter"
+                                 IsChecked="{Binding SelectByInterval, Mode=TwoWay}"
+                                 ToolTip="Filter by specific date range"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Quick Range Picker -->
+        <Border Grid.Row="1"
+                Background="White"
+                Padding="8"
+                Margin="0,0,0,4"
+                Visibility="{Binding SelectBySpecialInterval, Converter={StaticResource BoolFalseToCollapsedConverter}}">
+            <StackPanel>
+                <TextBlock Text="Select range:" 
+                           FontSize="11" 
+                           Foreground="#666666" 
+                           Margin="0,0,0,4"/>
+                <ListBox ItemsSource="{Binding AvailableSpecialRanges}"
+                         SelectedItem="{Binding SelectedSpecialInterval, Mode=TwoWay}"
+                         BorderThickness="0"
+                         Background="Transparent"
+                         Padding="0">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Padding" Value="8,4"/>
+                            <Setter Property="Margin" Value="0,1"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type timeFilter:SpecialTimeRangeViewModel}">
+                            <TextBlock Text="{Binding Title}" 
+                                       FontSize="12"
+                                       Foreground="#333333"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+        </Border>
+
+        <!-- Absolute Date Range Picker -->
+        <Border Grid.Row="1"
+                Background="White"
+                Padding="8"
+                Margin="0,0,0,4"
+                Visibility="{Binding SelectByInterval, Converter={StaticResource BoolFalseToCollapsedConverter}}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-                <Viewbox Width="20" Height="20"
-                         Visibility="{Binding SelectEverything, Converter={StaticResource BoolTrueToHiddenConverter}}">
-                    <Canvas Width="24" Height="24">
-                        <Path
-                            Data="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"
-                            Fill="{Binding Foreground, ElementName=PART_TimeFilterTitle}" />
-                    </Canvas>
-                </Viewbox>
-
-                <controls:FlatTextBlock Grid.Column="1"
-                                        Margin="4,0,0,0"
-                                        VerticalAlignment="Center"
-                                        Text="{Binding Description}"
-                                        x:Name="PART_TimeFilterTitle" />
+                <TextBlock Text="From:"
+                           VerticalAlignment="Center"
+                           FontSize="12"
+                           Foreground="#333333"
+                           Margin="0,0,8,0"/>
+                <DatePicker Grid.Column="1"
+                            Margin="0,4"
+                            SelectedDate="{Binding Minimum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                
+                <TextBlock Grid.Row="1"
+                           Text="To:"
+                           VerticalAlignment="Center"
+                           FontSize="12"
+                           Foreground="#333333"
+                           Margin="0,0,8,0"/>
+                <DatePicker Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="0,4"
+                            SelectedDate="{Binding Maximum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
-        </controls:FlatToggleButton>
-
-        <Grid Grid.Row="1"
-              Visibility="{Binding IsChecked, ElementName=PART_TimeFilterToggle, Converter={StaticResource BoolFalseToCollapsedConverter}}"
-              Margin="8">
-
-            <tab:FlatTabControl>
-                <controls:FlatTabItem Header="Everything"
-                                      IsSelected="{Binding SelectEverything, Mode=TwoWay}" />
-
-                <controls:FlatTabItem Header="Quick"
-                                      IsSelected="{Binding SelectBySpecialInterval, Mode=TwoWay}">
-                    <controls:FlatListView ItemsSource="{Binding AvailableSpecialRanges}"
-                                           SelectedItem="{Binding SelectedSpecialInterval, Mode=TwoWay}" >
-                        <controls:FlatListView.ItemTemplate>
-                            <DataTemplate DataType="{x:Type timeFilter:SpecialTimeRangeViewModel}">
-                                <TextBlock Text="{Binding Title}" />
-                            </DataTemplate>
-                        </controls:FlatListView.ItemTemplate>
-                    </controls:FlatListView>
-                </controls:FlatTabItem>
-
-                <controls:FlatTabItem Header="Absolute"
-                                      IsSelected="{Binding SelectByInterval, Mode=TwoWay}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-
-                        <controls:FlatTextBlock Text="From"
-                                                VerticalAlignment="Center" />
-                        <DatePicker Grid.Row="0"
-                                    Grid.Column="1"
-                                    Margin="4"
-                                    SelectedDate="{Binding Minimum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <controls:FlatTextBlock Grid.Row="1"
-                                                Grid.Column="0"
-                                                Text="To"
-                                                VerticalAlignment="Center" />
-                        <DatePicker Grid.Row="1"
-                                    Grid.Column="1"
-                                    Margin="4"
-                                    SelectedDate="{Binding Maximum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    </Grid>
-                </controls:FlatTabItem>
-            </tab:FlatTabControl>
-
-        </Grid>
+        </Border>
     </Grid>
 </UserControl>

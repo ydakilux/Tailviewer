@@ -5,11 +5,10 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using log4net;
-using Metrolib;
-using Metrolib.Controls;
 using Tailviewer.Settings;
 using Tailviewer.Ui.DataSourceTree;
 using Tailviewer.Ui.Menu;
@@ -192,7 +191,7 @@ namespace Tailviewer.Ui
 				// ensure that this method is invoked *after* the control has been created).
 				Dispatcher.BeginInvoke(new Action(() =>
 				{
-					var boxes = this.FindChildrenOfType<FilterTextBox>().ToList();
+					var boxes = this.FindChildrenOfType<TextBox>().ToList();
 					var textBox = boxes.LastOrDefault(x => x.DataContext == model);
 					textBox?.Focus();
 				}), DispatcherPriority.Background);
@@ -265,6 +264,50 @@ namespace Tailviewer.Ui
 		private void OnCloseFlyout(object sender, RoutedEventArgs e)
 		{
 			((IMainWindowViewModel) DataContext).CurrentFlyout = null;
+		}
+
+		private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (e.ClickCount == 2)
+			{
+				MaximizeRestoreButton_Click(sender, e);
+			}
+			else
+			{
+				DragMove();
+			}
+		}
+
+		private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+		{
+			WindowState = WindowState.Minimized;
+		}
+
+		private void MaximizeRestoreButton_Click(object sender, RoutedEventArgs e)
+		{
+			if (WindowState == WindowState.Maximized)
+			{
+				WindowState = WindowState.Normal;
+			}
+			else
+			{
+				WindowState = WindowState.Maximized;
+			}
+		}
+
+		private void CloseButton_Click(object sender, RoutedEventArgs e)
+		{
+			Close();
+		}
+
+		private void ActionCenterButton_Click(object sender, RoutedEventArgs e)
+		{
+			var button = sender as Button;
+			if (button?.ContextMenu != null)
+			{
+				button.ContextMenu.PlacementTarget = button;
+				button.ContextMenu.IsOpen = true;
+			}
 		}
 
 		private void KeyBindingsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

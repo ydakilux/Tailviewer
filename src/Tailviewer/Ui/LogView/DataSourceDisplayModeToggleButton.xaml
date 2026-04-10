@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:controls="clr-namespace:Metrolib.Controls;assembly=Metrolib"
                     xmlns:local="clr-namespace:Tailviewer.Ui.LogView">
 
     <Style TargetType="{x:Type local:DataSourceDisplayModeToggleButton}">
@@ -12,12 +11,14 @@
                             BorderThickness="{TemplateBinding BorderThickness}">
 
                         <StackPanel Orientation="Horizontal">
-                            <controls:OneWayToggle Content="Filename"
-                                                   ToolTip="Show the filename next to each line"
-                                                   IsChecked="{Binding ShowFilename, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" />
-                            <controls:OneWayToggle Content="Character"
-                                                   ToolTip="Show a one or two digit character code next to each line (and in the data sources panel)"
-                                                   IsChecked="{Binding ShowCharacterCode, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" />
+                            <RadioButton Content="Filename"
+                                         ToolTip="Show the filename next to each line"
+                                         IsChecked="{Binding ShowFilename, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                         GroupName="DisplayMode" />
+                            <RadioButton Content="Character"
+                                         ToolTip="Show a one or two digit character code next to each line (and in the data sources panel)"
+                                         IsChecked="{Binding ShowCharacterCode, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                         GroupName="DisplayMode" />
                         </StackPanel>
 
                     </Border>

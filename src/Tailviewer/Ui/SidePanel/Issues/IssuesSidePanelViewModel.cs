@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Media;
 using log4net;
-using Metrolib;
 using Tailviewer.Api;
 using Tailviewer.Archiver.Plugins;
 using Tailviewer.BusinessLogic.DataSources;

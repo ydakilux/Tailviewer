@@ -1,6 +1,5 @@
 ﻿using System.Windows;
-using System.Windows.Media;
-using Metrolib;
+using MahApps.Metro.IconPacks;
 using Tailviewer.Api;
 
 namespace Tailviewer.Ui.LogView
@@ -38,37 +37,37 @@ namespace Tailviewer.Ui.LogView
 			UncheckedIcon = GetUncheckedIcon(logLevel);
 		}
 
-		private Geometry GetCheckedIcon(LevelFlags logLevel)
+		private PackIconMaterialKind GetCheckedIcon(LevelFlags logLevel)
 		{
 			switch (logLevel)
 			{
-				case LevelFlags.Other: return null;
-				case LevelFlags.Trace: return Icons.ChatOutline;
-				case LevelFlags.Debug: return Icons.BugOutline;
-				case LevelFlags.Info: return Icons.InformationOutline;
-				case LevelFlags.Warning: return Icons.AlertOutline;
-				case LevelFlags.Error: return Icons.AlertCircleOutline;
-				case LevelFlags.Fatal: return Icons.AlertRhombusOutline;
-				case LevelFlags.All: return Icons.SetAll;
+				case LevelFlags.Other: return PackIconMaterialKind.DotsHorizontal;
+				case LevelFlags.Trace: return PackIconMaterialKind.MessageTextOutline;
+				case LevelFlags.Debug: return PackIconMaterialKind.BugOutline;
+				case LevelFlags.Info: return PackIconMaterialKind.InformationOutline;
+				case LevelFlags.Warning: return PackIconMaterialKind.AlertOutline;
+				case LevelFlags.Error: return PackIconMaterialKind.AlertCircleOutline;
+				case LevelFlags.Fatal: return PackIconMaterialKind.AlertOctagonOutline;
+				case LevelFlags.All: return PackIconMaterialKind.CheckAll;
 				default:
-					return null;
+					return PackIconMaterialKind.None;
 			}
 		}
 
-		private Geometry GetUncheckedIcon(LevelFlags logLevel)
+		private PackIconMaterialKind GetUncheckedIcon(LevelFlags logLevel)
 		{
 			switch (logLevel)
 			{
-				case LevelFlags.Other: return null;
-				case LevelFlags.Trace: return Icons.ChatRemoveOutline;
-				case LevelFlags.Debug: return Icons.BugRemoveOutline;
-				case LevelFlags.Info: return Icons.InformationRemoveOutline;
-				case LevelFlags.Warning: return Icons.AlertRemoveOutline;
-				case LevelFlags.Error: return Icons.AlertCircleRemoveOutline;
-				case LevelFlags.Fatal: return Icons.AlertRhombusRemoveOutline;
-				case LevelFlags.All: return Icons.SetNone;
+				case LevelFlags.Other: return PackIconMaterialKind.DotsHorizontal;
+				case LevelFlags.Trace: return PackIconMaterialKind.MessageOff;
+				case LevelFlags.Debug: return PackIconMaterialKind.BugCheck;
+				case LevelFlags.Info: return PackIconMaterialKind.InformationOff;
+				case LevelFlags.Warning: return PackIconMaterialKind.AlertRemove;
+				case LevelFlags.Error: return PackIconMaterialKind.CloseCircleOutline;
+				case LevelFlags.Fatal: return PackIconMaterialKind.CloseOctagonOutline;
+				case LevelFlags.All: return PackIconMaterialKind.CloseBox;
 				default:
-					return null;
+					return PackIconMaterialKind.None;
 			}
 		}
 	}

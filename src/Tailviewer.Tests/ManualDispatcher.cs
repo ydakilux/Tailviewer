@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Threading;
 using Metrolib;
 
@@ -15,6 +16,8 @@ namespace Tailviewer.Test
 		{
 			_pendingInvokes = new SortedDictionary<DispatcherPriority, List<Action>>();
 		}
+
+		public bool HasAccess => true;
 
 		public void BeginInvoke(Action fn)
 		{
@@ -34,6 +37,17 @@ namespace Tailviewer.Test
 
 				invokes.Add(fn);
 			}
+		}
+
+		public Task BeginInvokeAsync(Action fn)
+		{
+			return BeginInvokeAsync(fn, DispatcherPriority.Normal);
+		}
+
+		public Task BeginInvokeAsync(Action fn, DispatcherPriority priority)
+		{
+			BeginInvoke(fn, priority);
+			return Task.CompletedTask;
 		}
 
 		public void InvokeAll()

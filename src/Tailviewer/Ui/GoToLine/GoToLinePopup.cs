@@ -1,14 +1,13 @@
 ﻿using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using log4net;
-using Metrolib;
-using Metrolib.Controls;
 
 namespace Tailviewer.Ui.GoToLine
 {
 	public sealed class GoToLinePopup
-		: AutoPopup<EditorTextBox>
+		: AutoPopup<TextBox>
 	{
 		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -20,7 +19,7 @@ namespace Tailviewer.Ui.GoToLine
 
 		public GoToLinePopup()
 		{
-			InputBindings.Add(new InputBinding(new DelegateCommand2(OnEnter), new KeyGesture(Key.Enter)));
+			InputBindings.Add(new InputBinding(new DelegateCommand(OnEnter), new KeyGesture(Key.Enter)));
 		}
 
 		private void OnEnter()

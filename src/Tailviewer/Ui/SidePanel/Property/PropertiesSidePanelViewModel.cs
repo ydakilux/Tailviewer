@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Windows.Media;
 using log4net;
-using Metrolib;
 using Tailviewer.Api;
 using Tailviewer.BusinessLogic.DataSources;
 using Tailviewer.Core;

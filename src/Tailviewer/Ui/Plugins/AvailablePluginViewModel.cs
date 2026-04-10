@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
 using System.Windows.Media;
-using Metrolib;
 using Tailviewer.Archiver.Repository;
 
 namespace Tailviewer.Ui.Plugins
@@ -19,7 +18,7 @@ namespace Tailviewer.Ui.Plugins
 
 			Uri.TryCreate(plugin.Website, UriKind.Absolute, out var uri);
 			Website = uri;
-			DownloadCommand = new DelegateCommand2(download);
+			DownloadCommand = new DelegateCommand(download);
 		}
 
 		#region Implementation of IPluginViewModel

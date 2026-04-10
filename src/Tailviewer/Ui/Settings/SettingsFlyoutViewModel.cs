@@ -8,7 +8,6 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using log4net;
-using Metrolib;
 using Ookii.Dialogs.Wpf;
 using Tailviewer.Api;
 using Tailviewer.Settings;
@@ -185,7 +184,7 @@ namespace Tailviewer.Ui.Settings
 
 		public ICommand ChooseExportFolderCommand
 		{
-			get { return new DelegateCommand2(ChooseExportFolder); }
+			get { return new DelegateCommand(ChooseExportFolder); }
 		}
 
 		public int ScrollSpeed

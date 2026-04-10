@@ -2,15 +2,14 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                    xmlns:controls2="clr-namespace:Metrolib.Controls;assembly=Metrolib"
-                    xmlns:converters="clr-namespace:Metrolib.Converters;assembly=Metrolib"
-                    xmlns:metrolib="clr-namespace:Metrolib;assembly=Metrolib"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                     xmlns:dataSourceTree="clr-namespace:Tailviewer.Ui.DataSourceTree"
                     xmlns:ui="clr-namespace:Tailviewer.Ui"
                     mc:Ignorable="d">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Tailviewer;component/Themes/Constants.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Tailviewer;component/Themes/Converters.xaml" />
         <ResourceDictionary
             Source="pack://application:,,,/Tailviewer;component/Ui/DataSourceTree/CustomDataSourceTemplate.xaml" />
         <ResourceDictionary
@@ -24,8 +23,6 @@
         <ResourceDictionary
             Source="pack://application:,,,/Tailviewer;component/Ui/EmptyStateStyle.xaml" />
     </ResourceDictionary.MergedDictionaries>
-
-    <converters:EmptyToCollapsedConverter x:Key="EmptyToCollapsedConverter" />
 
     <Style TargetType="{x:Type dataSourceTree:DataSourcesControl}">
         <Setter Property="Background" Value="White" />
@@ -43,22 +40,22 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
 
-                            <controls2:FilterTextBox Grid.Row="0"
-                                                     x:Name="PART_DataSourceSearch"
-                                                     Margin="8,8,8,0"
-                                                     Height="26"
-                                                     FilterText="{Binding StringFilter, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                                     Watermark="Filter data sources (Ctrl+E)" />
+                            <TextBox Grid.Row="0"
+                                     x:Name="PART_DataSourceSearch"
+                                     Margin="8,8,8,0"
+                                     Height="26"
+                                     Text="{Binding StringFilter, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                     materialDesign:HintAssist.Hint="Filter data sources (Ctrl+E)" />
 
-                            <controls2:FlatTreeView ItemsSource="{TemplateBinding FilteredItemsSource}"
-                                                    x:Name="PART_DataSources"
-                                                    Margin="0,8,0,0"
-                                                    BorderThickness="0"
-                                                    SnapsToDevicePixels="True"
-                                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                                    ScrollViewer.VerticalScrollBarVisibility="Visible"
-                                                    ItemContainerStyle="{StaticResource DataSourceTreeViewItemStyle}"
-                                                    Grid.Row="1" />
+                            <TreeView ItemsSource="{TemplateBinding FilteredItemsSource}"
+                                      x:Name="PART_DataSources"
+                                      Margin="0,8,0,0"
+                                      BorderThickness="0"
+                                      SnapsToDevicePixels="True"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                      ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                      ItemContainerStyle="{StaticResource DataSourceTreeViewItemStyle}"
+                                      Grid.Row="1" />
 
                             <!-- Is displayed to the user when there are no data sources -->
                             <ui:EmptyState Grid.Row="1"

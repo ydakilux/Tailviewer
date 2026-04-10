@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
-using Metrolib;
 using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
 using Tailviewer.Api;
@@ -104,25 +103,25 @@ namespace Tailviewer.Ui
 			
 			_autoUpdater = new AutoUpdateViewModel(updater, settings.AutoUpdate, services.Retrieve<IDispatcher>());
 
-			var fileMenuViewModel = new FileMenuViewModel(new DelegateCommand2(AddDataSourceFromFile),
-			                                              new DelegateCommand2(AddDataSourceFromFolder),
+			var fileMenuViewModel = new FileMenuViewModel(new DelegateCommand(AddDataSourceFromFile),
+			                                              new DelegateCommand(AddDataSourceFromFolder),
 			                                              _logViewPanel.DataSources.RemoveCurrentDataSourceCommand,
 			                                              _logViewPanel.DataSources.RemoveAllDataSourcesCommand,
-			                                              new DelegateCommand2(ShowPlugins),
-			                                              new DelegateCommand2(ShowSettings),
-			                                              new DelegateCommand2(Exit));
-			var editMenu = new EditMenuViewModel(new DelegateCommand2(ShowGoToLine),
-			                                     new DelegateCommand2(ShowGoToDataSource),
-			                                     new DelegateCommand2(GoToNextDataSource),
-			                                     new DelegateCommand2(GoToPreviousDataSource),
+			                                              new DelegateCommand(ShowPlugins),
+			                                              new DelegateCommand(ShowSettings),
+			                                              new DelegateCommand(Exit));
+			var editMenu = new EditMenuViewModel(new DelegateCommand(ShowGoToLine),
+			                                     new DelegateCommand(ShowGoToDataSource),
+			                                     new DelegateCommand(GoToNextDataSource),
+			                                     new DelegateCommand(GoToPreviousDataSource),
 			                                     _logViewPanel);
 			var viewMenu = new ViewMenuViewModel();
-			var helpMenu = new HelpMenuViewModel(new DelegateCommand2(ReportIssue),
-			                                     new DelegateCommand2(SuggestFeature),
-			                                     new DelegateCommand2(AskQuestion),
+			var helpMenu = new HelpMenuViewModel(new DelegateCommand(ReportIssue),
+			                                     new DelegateCommand(SuggestFeature),
+			                                     new DelegateCommand(AskQuestion),
 			                                     AutoUpdater.CheckForUpdatesCommand,
 			                                     new DelegateCommand(ShowLog),
-			                                     new DelegateCommand2(ShowAboutFlyout));
+			                                     new DelegateCommand(ShowAboutFlyout));
 			_mainMenu = new MainMenu(fileMenuViewModel,
 			                         editMenu,
 			                         viewMenu,

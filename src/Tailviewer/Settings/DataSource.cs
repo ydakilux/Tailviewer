@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Xml;
 using log4net;
-using Metrolib;
 using Tailviewer.Api;
 using Tailviewer.Core;
 
@@ -258,7 +257,7 @@ namespace Tailviewer.Settings
 						break;
 
 					case "recursive":
-						Recursive = reader.ReadContentAsBoolean();
+						Recursive = reader.ReadContentAsBool();
 						break;
 
 					case "lastviewed":

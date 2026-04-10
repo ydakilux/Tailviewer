@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using System.Windows.Input;
-using Metrolib;
 
 namespace Tailviewer.Ui.Menu
 {
@@ -14,7 +13,7 @@ namespace Tailviewer.Ui.Menu
 		private readonly ICommand _command;
 
 		public KeyBindingCommand(Action action)
-			: this(new DelegateCommand2(action))
+			: this(new DelegateCommand(action))
 		{}
 
 		public KeyBindingCommand(ICommand command)

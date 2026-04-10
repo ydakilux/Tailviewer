@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Input;
 using System.Windows.Media;
-using Metrolib;
 using Tailviewer.Ui.DataSourceTree;
 
 namespace Tailviewer.Ui.Menu
@@ -10,12 +9,12 @@ namespace Tailviewer.Ui.Menu
 		: IMenuViewModel
 	{
 		private readonly IMergedDataSourceViewModel _viewModel;
-		private readonly DelegateCommand2 _command;
+		private readonly DelegateCommand _command;
 
 		public ExcludeAllInGroupViewModel(IMergedDataSourceViewModel viewModel)
 		{
 			_viewModel = viewModel;
-			_command = new DelegateCommand2(OnExcludeAll);
+			_command = new DelegateCommand(OnExcludeAll);
 		}
 
 		private void OnExcludeAll()

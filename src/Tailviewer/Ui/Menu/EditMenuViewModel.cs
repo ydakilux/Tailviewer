@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Metrolib;
 using Tailviewer.Collections;
 using Tailviewer.Ui.DataSourceTree;
 using Tailviewer.Ui.LogView;

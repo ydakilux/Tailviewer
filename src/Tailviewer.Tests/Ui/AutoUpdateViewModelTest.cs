@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Metrolib;
 using Moq;
 using NUnit.Framework;
 using Tailviewer.BusinessLogic.AutoUpdates;

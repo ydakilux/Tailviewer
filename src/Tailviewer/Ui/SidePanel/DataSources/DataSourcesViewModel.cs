@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
-using Metrolib;
 using Tailviewer.Api;
 using Tailviewer.BusinessLogic.ActionCenter;
 using Tailviewer.BusinessLogic.DataSources;
@@ -26,8 +25,8 @@ namespace Tailviewer.Ui.SidePanel.DataSources
 		private readonly ObservableCollection<IDataSourceViewModel> _observable;
 		private readonly IActionCenter _actionCenter;
 		private readonly IApplicationSettings _settings;
-		private readonly DelegateCommand2 _removeCurrentDataSourceCommand;
-		private readonly DelegateCommand2 _removeAllDataSourcesCommand;
+		private readonly DelegateCommand _removeCurrentDataSourceCommand;
+		private readonly DelegateCommand _removeAllDataSourcesCommand;
 		private IDataSourceViewModel _selectedItem;
 		private bool _isPinned;
 		private bool _isChecked;
@@ -39,8 +38,8 @@ namespace Tailviewer.Ui.SidePanel.DataSources
 			_observable = new ObservableCollection<IDataSourceViewModel>();
 			_allDataSourceViewModels = new List<IDataSourceViewModel>();
 			_dataSources = dataSources ?? throw new ArgumentNullException(nameof(dataSources));
-			_removeCurrentDataSourceCommand = new DelegateCommand2(CloseSelectedDataSource);
-			_removeAllDataSourcesCommand = new DelegateCommand2(CloseAllDataSources);
+			_removeCurrentDataSourceCommand = new DelegateCommand(CloseSelectedDataSource);
+			_removeAllDataSourcesCommand = new DelegateCommand(CloseAllDataSources);
 
 			foreach (IDataSource dataSource in dataSources.Sources)
 			{

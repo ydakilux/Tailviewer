@@ -1,0 +1,31 @@
+<Project>
+  <PropertyGroup>
+    <!-- Suppress NU1701 warnings for .NET Framework packages on .NET 10 -->
+    <!-- These packages (Metrolib, SharpRemote, IsabelDb) will be replaced in Phase 3/4 -->
+    <NoWarn>$(NoWarn);NU1701</NoWarn>
+    
+    <!-- Suppress NU1510 (transitive package warnings) -->
+    <NoWarn>$(NoWarn);NU1510</NoWarn>
+    
+    <!-- Suppress MSB3xxx assembly warnings and MSB4803 COM warnings -->
+    <NoWarn>$(NoWarn);MSB3245;MSB3243;MSB3277;MSB3030;MSB4803</NoWarn>
+    
+    <!-- Suppress CA2022 (inexact read) and CA1416 (platform-specific) analyzer warnings -->
+    <!-- Will be addressed in code cleanup after migration is stable -->
+    <NoWarn>$(NoWarn);CA2022;CA1416;SYSLIB0012</NoWarn>
+    
+    <!-- Suppress obsolete serialization warnings (SYSLIB0003, SYSLIB0011, SYSLIB0051, CS0672) -->
+    <!-- Binary serialization is obsolete in .NET 10 but still needed for legacy exception handling -->
+    <NoWarn>$(NoWarn);SYSLIB0003;SYSLIB0011;SYSLIB0051;CS0672</NoWarn>
+    
+    <!-- Suppress UTF-7 encoding warnings (SYSLIB0001) -->
+    <NoWarn>$(NoWarn);SYSLIB0001</NoWarn>
+    
+    <!-- Suppress obsolete WebClient and crypto warnings (SYSLIB0014, SYSLIB0023) -->
+    <!-- Will be replaced with HttpClient and modern crypto in Phase 3/4 -->
+    <NoWarn>$(NoWarn);SYSLIB0014;SYSLIB0023</NoWarn>
+    
+    <!-- Suppress unused field warnings (CS0169) -->
+    <NoWarn>$(NoWarn);CS0169</NoWarn>
+  </PropertyGroup>
+</Project>

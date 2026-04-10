@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using FluentAssertions;
-using Metrolib;
 using Moq;
 using NUnit.Framework;
 using Tailviewer.Api;

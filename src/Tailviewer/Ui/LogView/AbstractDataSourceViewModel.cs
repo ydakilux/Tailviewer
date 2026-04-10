@@ -50,8 +50,8 @@ namespace Tailviewer.Ui.LogView
 		private readonly SearchViewModel _search;
 		private readonly FindAllViewModel _findAll;
 		private double _progress;
-		private readonly DelegateCommand2 _clearScreenCommand;
-		private readonly DelegateCommand2 _showAllCommand;
+		private readonly DelegateCommand _clearScreenCommand;
+		private readonly DelegateCommand _showAllCommand;
 
 		private readonly ObservableCollectionExt<IMenuViewModel> _fileMenuItems;
 		private readonly ObservableCollectionExt<IMenuViewModel> _editMenuItems;
@@ -70,16 +70,16 @@ namespace Tailviewer.Ui.LogView
 
 			_removeCommand = new DelegateCommand(OnRemoveDataSource);
 
-			_clearScreenCommand = new DelegateCommand2(ClearScreen);
+			_clearScreenCommand = new DelegateCommand(ClearScreen);
 
-			_showAllCommand = new DelegateCommand2(ShowAll)
+			_showAllCommand = new DelegateCommand(ShowAll)
 			{
 				CanBeExecuted = false
 			};
 
 			_fileMenuItems = new ObservableCollectionExt<IMenuViewModel>
 			{
-				new CommandMenuViewModel(new DelegateCommand2(ExportToFile))
+				new CommandMenuViewModel(new DelegateCommand(ExportToFile))
 				{
 					Header = "Export To File",
 					ToolTip = "Export the current Data Source to a text file (with the current filters)"
@@ -518,7 +518,7 @@ namespace Tailviewer.Ui.LogView
 				_dataSource = dataSource;
 			}
 
-			public ICommand CloseCommand => new DelegateCommand2(CloseFindAll);
+			public ICommand CloseCommand => new DelegateCommand(CloseFindAll);
 
 			public IEnumerable<LogLineIndex> SelectedLogLines
 			{

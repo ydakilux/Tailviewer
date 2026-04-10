@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Diagnostics.Contracts;
 using System.Reflection;
 using System.Windows;
 using System.Xml;
 using log4net;
-using Metrolib;
+using Tailviewer.Core;
 
 namespace Tailviewer.Settings
 {

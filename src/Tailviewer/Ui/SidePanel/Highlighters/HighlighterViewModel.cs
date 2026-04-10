@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using Metrolib;
 using Tailviewer.BusinessLogic.Highlighters;
 using Tailviewer.Core;
 
@@ -20,7 +19,7 @@ namespace Tailviewer.Ui.SidePanel.Highlighters
 		public HighlighterViewModel(Highlighter highlighter, Action<HighlighterViewModel> onRemove)
 		{
 			_highlighter = highlighter;
-			_removeCommand = new DelegateCommand2(() => onRemove(this));
+			_removeCommand = new DelegateCommand(() => onRemove(this));
 			_isValid = true;
 		}
 

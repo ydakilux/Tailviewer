@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
-using Metrolib;
 using Tailviewer.BusinessLogic.ActionCenter;
 using Tailviewer.BusinessLogic.DataSources;
 using Tailviewer.BusinessLogic.FileExplorer;
@@ -43,7 +42,7 @@ namespace Tailviewer.Ui.DataSourceTree
 
 			AddFileMenuItems(new []
 			{
-				new CommandMenuViewModel(new DelegateCommand2(OpenInExplorer))
+				new CommandMenuViewModel(new DelegateCommand(OpenInExplorer))
 				{
 					Header = "Open Containing Folder",
 					ToolTip = "Opens Folder the current Data Source is contained in"

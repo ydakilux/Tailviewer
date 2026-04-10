@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Input;
-using Metrolib;
 using Tailviewer.BusinessLogic.Bookmarks;
 using Tailviewer.BusinessLogic.DataSources;
 

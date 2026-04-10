@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using log4net;
-using Metrolib;
 using Size = System.Windows.Size;
 
 namespace Tailviewer.Settings

@@ -6,7 +6,6 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
-using Metrolib;
 using Tailviewer.Api;
 using Tailviewer.BusinessLogic.Bookmarks;
 using Tailviewer.BusinessLogic.DataSources;
@@ -17,8 +16,8 @@ namespace Tailviewer.Ui.SidePanel.Bookmarks
 	public sealed class BookmarksViewModel
 		: AbstractSidePanelViewModel
 	{
-		private readonly DelegateCommand2 _addBookmarkCommand;
-		private readonly DelegateCommand2 _removeAllBookmarksCommand;
+		private readonly DelegateCommand _addBookmarkCommand;
+		private readonly DelegateCommand _removeAllBookmarksCommand;
 		private readonly ObservableCollection<BookmarkViewModel> _bookmarks;
 		private readonly Dictionary<Bookmark, BookmarkViewModel> _viewModelByBookmark;
 		private readonly IDataSources _dataSources;
@@ -33,11 +32,11 @@ namespace Tailviewer.Ui.SidePanel.Bookmarks
 		{
 			_dataSources = dataSources ?? throw new ArgumentNullException(nameof(dataSources));
 			_navigateToBookmark = navigateToBookmark ?? throw new ArgumentNullException(nameof(navigateToBookmark));
-			_addBookmarkCommand = new DelegateCommand2(AddBookmark)
+			_addBookmarkCommand = new DelegateCommand(AddBookmark)
 			{
 				CanBeExecuted = false
 			};
-			_removeAllBookmarksCommand = new DelegateCommand2(RemoveAllBookmarks)
+			_removeAllBookmarksCommand = new DelegateCommand(RemoveAllBookmarks)
 			{
 				CanBeExecuted = false
 			};

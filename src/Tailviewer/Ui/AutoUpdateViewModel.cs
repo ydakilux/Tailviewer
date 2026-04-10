@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using log4net;
-using Metrolib;
 using Tailviewer.BusinessLogic.AutoUpdates;
 using Tailviewer.Settings;
 

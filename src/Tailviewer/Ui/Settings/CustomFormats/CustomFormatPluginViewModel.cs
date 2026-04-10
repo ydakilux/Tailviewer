@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
-using Metrolib;
 using Tailviewer.Api;
 using Tailviewer.Archiver.Plugins;
 using Tailviewer.Settings;
@@ -33,7 +32,7 @@ namespace Tailviewer.Ui.Settings.CustomFormats
 			_plugin = plugin;
 			_encodings = encodings;
 			_name = plugin.FormatName;
-			_addCommand = new DelegateCommand2(Add);
+			_addCommand = new DelegateCommand(Add);
 			_formats = new ObservableCollection<CustomFormatViewModel>();
 
 			foreach (var customFormat in _settings.CustomFormats)
@@ -60,7 +59,7 @@ namespace Tailviewer.Ui.Settings.CustomFormats
 			                                          _plugin,
 			                                          _encodings,
 			                                          customFormat);
-			viewModel.RemoveCommand = new DelegateCommand2(() => Remove(viewModel));
+			viewModel.RemoveCommand = new DelegateCommand(() => Remove(viewModel));
 			_formats.Add(viewModel);
 		}
 

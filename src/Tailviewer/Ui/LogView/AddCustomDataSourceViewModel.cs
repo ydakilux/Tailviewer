@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Input;
-using Metrolib;
 
 namespace Tailviewer.Ui.LogView
 {
@@ -19,7 +18,7 @@ namespace Tailviewer.Ui.LogView
 		public AddCustomDataSourceViewModel(string name, Action add)
 		{
 			_name = name;
-			_command = new DelegateCommand2(add);
+			_command = new DelegateCommand(add);
 		}
 	}
 }

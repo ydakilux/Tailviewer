@@ -1,7 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:converters="clr-namespace:Metrolib.Converters;assembly=Metrolib"
-                    xmlns:controls="clr-namespace:Metrolib.Controls;assembly=Metrolib"
+                    xmlns:converters="clr-namespace:Tailviewer.Ui.Converters"
                     xmlns:local="clr-namespace:Tailviewer.Ui.Plugins">
 
     <converters:NullToCollapsedConverter x:Key="NullToCollapsedConverter" />
@@ -43,7 +42,6 @@
                          VerticalAlignment="Center"
                          HorizontalAlignment="Center">
                     <Canvas Width="24" Height="24">
-                        <!-- TODO: Move to metrolib 'Icons.Exclamation' -->
                         <Path Data="M11,4.5H13V15.5H11V4.5M13,17.5V19.5H11V17.5H13Z" Fill="Red" />
                     </Canvas>
                 </Viewbox>
@@ -88,15 +86,19 @@
                        VerticalAlignment="Center"
                        Text="{Binding Version, StringFormat='v{0}'}" />
 
-            <controls:TrashButton Grid.Column="3"
-                                  VerticalAlignment="Center"
-                                  Visibility="{Binding DeleteCommand, Converter={StaticResource NullToCollapsedConverter}}"
-                                  Command="{Binding DeleteCommand}" />
-            
-            <controls:DownloadButton Grid.Column="3"
-                                     VerticalAlignment="Center"
-                                     Visibility="{Binding DownloadCommand, Converter={StaticResource NullToCollapsedConverter}}"
-                                     Command="{Binding DownloadCommand}" />
+            <Button Grid.Column="3"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding DeleteCommand, Converter={StaticResource NullToCollapsedConverter}}"
+                    Command="{Binding DeleteCommand}">
+                <TextBlock Text="🗑" />
+            </Button>
+
+            <Button Grid.Column="3"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding DownloadCommand, Converter={StaticResource NullToCollapsedConverter}}"
+                    Command="{Binding DownloadCommand}">
+                <TextBlock Text="⬇" />
+            </Button>
 
         </Grid>
     </DataTemplate>

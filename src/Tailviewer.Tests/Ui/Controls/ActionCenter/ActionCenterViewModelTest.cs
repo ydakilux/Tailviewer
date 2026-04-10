@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using FluentAssertions;
-using Metrolib;
 using NUnit.Framework;
 using Tailviewer.BusinessLogic.ActionCenter;
+using Tailviewer.Ui;
 using Tailviewer.Ui.ActionCenter;
 
 namespace Tailviewer.Tests.Ui.Controls.ActionCenter

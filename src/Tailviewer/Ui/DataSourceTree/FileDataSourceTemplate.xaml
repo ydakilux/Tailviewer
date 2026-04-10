@@ -1,24 +1,21 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:converters="clr-namespace:Tailviewer.Ui.Converters"
-                    xmlns:converters2="clr-namespace:Metrolib.Converters;assembly=Metrolib"
-                    xmlns:controls="clr-namespace:Metrolib.Controls;assembly=Metrolib"
                     xmlns:dataSourceTree="clr-namespace:Tailviewer.Ui.DataSourceTree"
                     xmlns:logView="clr-namespace:Tailviewer.Ui.LogView"
                     xmlns:ui="clr-namespace:Tailviewer.Ui">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Tailviewer;component/Themes/Constants.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Tailviewer;component/Themes/Converters.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Tailviewer;component/Ui/Menu/MenuItemTemplates.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <converters2:BoolFalseToHiddenConverter x:Key="BoolFalseToHiddenConverter" />
-    <converters2:BoolTrueToHiddenConverter x:Key="BoolTrueToHiddenConverter" />
     <converters:ZeroToHiddenConverter x:Key="ZeroToHiddenConverter" />
     <converters:CountConverter x:Key="CountConverter" />
     <converters:SkippedDueToTimestampConverter x:Key="SkippedDueToTimestampConverter" />
     <converters:CountConverter x:Key="NewLogLineCountConverter" HasPlural="False" Suffix="new" />
-    <converters2:BoolFalseToCollapsedConverter x:Key="BoolFalseToCollapsedConverter" />
 
     <DataTemplate DataType="{x:Type dataSourceTree:FileDataSourceViewModel}">
         <Grid Background="Transparent">
@@ -70,14 +67,14 @@
                 </Grid.RowDefinitions>
 
                 <!-- Name -->
-                <controls:FlatTextBlock Text="{Binding DisplayName}" />
+                <TextBlock Text="{Binding DisplayName}" />
 
                 <!-- Folder -->
-                <controls:FlatTextBlock Text="{Binding Folder}"
-                                        Foreground="{StaticResource TextBrushUnimportant}"
-                                        ToolTip="{Binding FullName}"
-                                        TextTrimming="CharacterEllipsis"
-                                        Grid.Row="1" />
+                <TextBlock Text="{Binding Folder}"
+                           Foreground="{StaticResource TextBrushUnimportant}"
+                           ToolTip="{Binding FullName}"
+                           TextTrimming="CharacterEllipsis"
+                           Grid.Row="1" />
 
                 <!-- Misc: Skipped, etc... -->
                 <Grid Grid.Row="2">
@@ -102,12 +99,15 @@
                 </Grid>
             </Grid>
 
-            <controls:CloseButton VerticalAlignment="Stretch"
-                                  HorizontalAlignment="Right"
-                                  Command="{Binding RemoveCommand}"
-                                  ToolTip="Close this file"
-                                  Visibility="{Binding CanBeRemoved, Converter={StaticResource BoolFalseToHiddenConverter}}"
-                                  Grid.Column="2" />
+            <Button VerticalAlignment="Stretch"
+                    HorizontalAlignment="Right"
+                    Command="{Binding RemoveCommand}"
+                    ToolTip="Close this file"
+                    Visibility="{Binding CanBeRemoved, Converter={StaticResource BoolFalseToHiddenConverter}}"
+                    Grid.Column="2"
+                    Width="20" Height="20" Padding="0" BorderThickness="0" Background="Transparent">
+                <TextBlock Text="✕" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Button>
         </Grid>
     </DataTemplate>
 </ResourceDictionary>

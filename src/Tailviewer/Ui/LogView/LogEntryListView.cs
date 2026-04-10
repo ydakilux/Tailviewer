@@ -11,7 +11,6 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using log4net;
-using Metrolib.Controls;
 using Tailviewer.Api;
 using Tailviewer.BusinessLogic.DataSources;
 using Tailviewer.BusinessLogic.Searches;
@@ -100,11 +99,11 @@ namespace Tailviewer.Ui.LogView
 		private readonly DeltaTimeColumnPresenter _deltaTimesColumn;
 		private readonly ElapsedTimeColumnPresenter _elapsedTimeColumn;
 
-		private readonly FlatScrollBar _horizontalScrollBar;
+		private readonly ScrollBar _horizontalScrollBar;
 
 		private readonly OriginalLineNumberColumnPresenter _lineNumberColumn;
 		private readonly DispatcherTimer _timer;
-		private readonly FlatScrollBar _verticalScrollBar;
+		private readonly ScrollBar _verticalScrollBar;
 
 		private int _maxLineWidth;
 		private int _pendingModificationsCount;
@@ -125,21 +124,21 @@ namespace Tailviewer.Ui.LogView
 			RowDefinitions.Add(new RowDefinition { Height = new GridLength(value: 1, type: GridUnitType.Star) });
 			RowDefinitions.Add(new RowDefinition { Height = new GridLength(value: 1, type: GridUnitType.Auto) });
 
-			_verticalScrollBar = new FlatScrollBar
+			_verticalScrollBar = new ScrollBar
 			{
 				Name = "PART_VerticalScrollBar",
-				Thickness = 18
+				Width = 18
 			};
 			_verticalScrollBar.ValueChanged += VerticalScrollBarOnValueChanged;
 			_verticalScrollBar.Scroll += VerticalScrollBarOnScroll;
 			_verticalScrollBar.SetValue(RowProperty, value: 0);
 			_verticalScrollBar.SetValue(ColumnProperty, value: 6);
 
-			_horizontalScrollBar = new FlatScrollBar
+			_horizontalScrollBar = new ScrollBar
 			{
 				Name = "PART_HorizontalScrollBar",
 				Orientation = Orientation.Horizontal,
-				Thickness = 18
+				Height = 18
 			};
 			_horizontalScrollBar.SetValue(RowProperty, value: 1);
 			_horizontalScrollBar.SetValue(ColumnProperty, value: 0);

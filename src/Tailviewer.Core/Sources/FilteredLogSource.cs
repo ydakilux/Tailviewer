@@ -322,17 +322,17 @@ namespace Tailviewer.Core
 			return string.Format("{0} (Filtered)", _source);
 		}
 
-		/// <inheritdoc />
-		protected override TimeSpan RunOnce(CancellationToken token)
-		{
-			var performedWork= ProcessModifications(token);
-			ProcessNewLogEntries(token);
+	/// <inheritdoc />
+	protected override TimeSpan RunOnce(CancellationToken token)
+	{
+		var performedWork= ProcessModifications(token);
+		ProcessNewLogEntries(token);
 
-			if (performedWork)
-				return TimeSpan.Zero;
+		if (performedWork)
+			return TimeSpan.Zero;
 
-			return _maximumWaitTime;
-		}
+		return _maximumWaitTime;
+	}
 
 		/// <summary>
 		///     Processes as many pending modifications as are available, removes existing indices if necessary and

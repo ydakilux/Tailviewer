@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
-using Metrolib;
 using Ookii.Dialogs.Wpf;
 using Tailviewer.BusinessLogic.ActionCenter;
 using Tailviewer.BusinessLogic.DataSources;
@@ -53,7 +52,7 @@ namespace Tailviewer.Ui.DataSourceTree
 
 			AddFileMenuItems(new []
 			{
-				new CommandMenuViewModel(new DelegateCommand2(OpenInExplorer))
+				new CommandMenuViewModel(new DelegateCommand(OpenInExplorer))
 				{
 					Header = "Open Containing Folder",
 					ToolTip = "Opens the Folder being watched in Windows Explorer"
@@ -120,7 +119,7 @@ namespace Tailviewer.Ui.DataSourceTree
 			set { throw new NotImplementedException(); }
 		}
 
-		public ICommand ChooseFolderCommand => new DelegateCommand2(ChooseFolder);
+		public ICommand ChooseFolderCommand => new DelegateCommand(ChooseFolder);
 
 		public override bool CanBeRenamed => false;
 

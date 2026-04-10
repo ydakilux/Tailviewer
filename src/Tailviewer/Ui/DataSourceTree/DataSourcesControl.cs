@@ -10,7 +10,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using log4net;
-using Metrolib.Controls;
 using Tailviewer.Collections;
 using Tailviewer.Ui.LogView;
 using Tailviewer.Ui.SidePanel.DataSources;
@@ -22,7 +21,7 @@ namespace Tailviewer.Ui.DataSourceTree
 	///     <see cref="IDataSourceViewModel" />.
 	/// </summary>
 	[TemplatePart(Name = PART_DataSources, Type = typeof(TreeView))]
-	[TemplatePart(Name = PART_DataSourceSearch, Type = typeof(FilterTextBox))]
+	[TemplatePart(Name = PART_DataSourceSearch, Type = typeof(TextBox))]
 	public class DataSourcesControl : Control
 	{
 		public const string PART_DataSources = "PART_DataSources";
@@ -77,7 +76,7 @@ namespace Tailviewer.Ui.DataSourceTree
 		public static DataSourcesControl Instance;
 		private TreeView _partDataSources;
 
-		private FilterTextBox _partDataSourceSearch;
+		private TextBox _partDataSourceSearch;
 
 		static DataSourcesControl()
 		{
@@ -226,7 +225,7 @@ namespace Tailviewer.Ui.DataSourceTree
 		{
 			base.OnApplyTemplate();
 
-			_partDataSourceSearch = (FilterTextBox) GetTemplateChild(PART_DataSourceSearch);
+			_partDataSourceSearch = (TextBox) GetTemplateChild(PART_DataSourceSearch);
 			_partDataSources = (TreeView) GetTemplateChild(PART_DataSources);
 			_partDataSources.AllowDrop = true;
 			_partDataSources.SelectedItemChanged += PartDataSourcesOnSelectedItemChanged;

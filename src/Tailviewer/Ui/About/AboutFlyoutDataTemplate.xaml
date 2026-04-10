@@ -1,27 +1,25 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:tab="clr-namespace:Metrolib.Controls.Tab;assembly=Metrolib"
-                    xmlns:controls="clr-namespace:Metrolib.Controls;assembly=Metrolib"
                     xmlns:mainPanel="clr-namespace:Tailviewer.Ui.About">
 
     <DataTemplate DataType="{x:Type mainPanel:AboutFlyoutViewModel}">
-        <tab:FlatTabControl Padding="0" Foreground="#333333"
-                            HorizontalContentAlignment="Center">
-            <controls:FlatTabItem Header="Tailviewer"
-                                  HorizontalContentAlignment="Stretch">
+        <TabControl Padding="0" Foreground="#333333"
+                    HorizontalContentAlignment="Center">
+            <TabItem Header="Tailviewer"
+                     HorizontalContentAlignment="Stretch">
                 <mainPanel:TailviewerControl />
-            </controls:FlatTabItem>
+            </TabItem>
 
-            <controls:FlatTabItem Header="Licenses"
-                                  HorizontalContentAlignment="Stretch">
+            <TabItem Header="Licenses"
+                     HorizontalContentAlignment="Stretch">
                 <mainPanel:LicenseControl />
-            </controls:FlatTabItem>
+            </TabItem>
 
-            <controls:FlatTabItem Header="Changelog"
-                                  HorizontalContentAlignment="Stretch">
+            <TabItem Header="Changelog"
+                     HorizontalContentAlignment="Stretch">
                 <mainPanel:ChangelogControl />
-            </controls:FlatTabItem>
-        </tab:FlatTabControl>
+            </TabItem>
+        </TabControl>
     </DataTemplate>
 
 </ResourceDictionary>

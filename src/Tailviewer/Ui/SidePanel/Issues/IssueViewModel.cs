@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
 using System.Windows.Media;
-using Metrolib;
 using Tailviewer.Api;
 
 namespace Tailviewer.Ui.SidePanel.Issues
@@ -17,7 +16,7 @@ namespace Tailviewer.Ui.SidePanel.Issues
 			_goto = @goto;
 		}
 
-		public ICommand GoToCommand => new DelegateCommand2(() => _goto(_issue.OriginalLineIndex));
+		public ICommand GoToCommand => new DelegateCommand(() => _goto(_issue.OriginalLineIndex));
 		public Geometry Icon => Icons.Alert;
 		public LogLineIndex Line => _issue.OriginalLineIndex;
 		public string Summary => _issue.Summary;

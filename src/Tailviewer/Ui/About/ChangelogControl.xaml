@@ -3,9 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:controls="clr-namespace:Metrolib.Controls;assembly=Metrolib"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
-             xmlns:converters="clr-namespace:Metrolib.Converters;assembly=Metrolib"
              xmlns:converters1="clr-namespace:Tailviewer.Ui.Converters"
              xmlns:actionCenter="clr-namespace:Tailviewer.Ui.ActionCenter"
              xmlns:about="clr-namespace:Tailviewer.Ui.About"
@@ -15,14 +13,18 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
-            <converters:BoolFalseToCollapsedConverter x:Key="BoolFalseToCollapsedConverter" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Tailviewer;component/Themes/Constants.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters1:BoolFalseToCollapsedConverter x:Key="BoolFalseToCollapsedConverter" />
 
             <converters1:VersionConverter x:Key="VersionConverter" />
 
             <DataTemplate x:Key="BulletinPoint" DataType="{x:Type system:String}">
-                <controls:MarkdownPresenter Markdown="{Binding}"
-                                            TextWrapping="Wrap"
-                                            FontSize="14" />
+                <TextBlock Text="{Binding}"
+                           TextWrapping="Wrap"
+                           FontSize="14" />
             </DataTemplate>
 
             <DataTemplate x:Key="FeatureListTemplate">
@@ -35,7 +37,7 @@
     </UserControl.Resources>
 
     <Grid Margin="8">
-        <controls:FlatScrollViewer>
+        <ScrollViewer>
             <ItemsControl ItemsSource="{Binding Changes}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type actionCenter:ChangeViewModel}">
@@ -54,38 +56,47 @@
                                     <RowDefinition />
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
-                                <controls:FlatGroupBox x:Name="PART_Features"
-                                                       Header="Features:"
-                                                       HeaderTemplate="{StaticResource FeatureListTemplate}"
-                                                       Visibility="{Binding HasFeatures, Converter={StaticResource BoolFalseToCollapsedConverter}}">
-                                    <controls:BulletinItemsControl ItemsSource="{Binding Features}"
-                                                                   BulletinMargin="4,6,4,4"
-                                                                   ItemTemplate="{StaticResource BulletinPoint}" />
-                                </controls:FlatGroupBox>
-                                <controls:FlatGroupBox x:Name="PART_Bugfixes"
-                                                       Header="Bugfixes:"
-                                                       Grid.Row="1"
-                                                       HeaderTemplate="{StaticResource FeatureListTemplate}"
-                                                       Visibility="{Binding HasBugfixes, Converter={StaticResource BoolFalseToCollapsedConverter}}">
-                                    <controls:BulletinItemsControl ItemsSource="{Binding Bugfixes}"
-                                                                   BulletinMargin="4,6,4,4"
-                                                                   ItemTemplate="{StaticResource BulletinPoint}" />
-                                </controls:FlatGroupBox>
-                                <controls:FlatGroupBox x:Name="PART_Misc"
-                                                       Header="Miscellaneous"
-                                                       Grid.Row="2"
-                                                       HeaderTemplate="{StaticResource FeatureListTemplate}"
-                                                       Visibility="{Binding HasMisc, Converter={StaticResource BoolFalseToCollapsedConverter}}">
-                                    <controls:BulletinItemsControl ItemsSource="{Binding Misc}"
-                                                                   BulletinMargin="4,6,4,4"
-                                                                   ItemTemplate="{StaticResource BulletinPoint}" />
-                                </controls:FlatGroupBox>
+                                <GroupBox x:Name="PART_Features"
+                                          Visibility="{Binding HasFeatures, Converter={StaticResource BoolFalseToCollapsedConverter}}">
+                                    <GroupBox.Header>
+                                        <TextBlock Text="Features:"
+                                                   Foreground="{StaticResource ForegroundBrush}"
+                                                   FontSize="14"
+                                                   FontWeight="SemiBold" />
+                                    </GroupBox.Header>
+                                    <ItemsControl ItemsSource="{Binding Features}"
+                                                  ItemTemplate="{StaticResource BulletinPoint}" />
+                                </GroupBox>
+                                <GroupBox x:Name="PART_Bugfixes"
+                                          Grid.Row="1"
+                                          Visibility="{Binding HasBugfixes, Converter={StaticResource BoolFalseToCollapsedConverter}}">
+                                    <GroupBox.Header>
+                                        <TextBlock Text="Bugfixes:"
+                                                   Foreground="{StaticResource ForegroundBrush}"
+                                                   FontSize="14"
+                                                   FontWeight="SemiBold" />
+                                    </GroupBox.Header>
+                                    <ItemsControl ItemsSource="{Binding Bugfixes}"
+                                                  ItemTemplate="{StaticResource BulletinPoint}" />
+                                </GroupBox>
+                                <GroupBox x:Name="PART_Misc"
+                                          Grid.Row="2"
+                                          Visibility="{Binding HasMisc, Converter={StaticResource BoolFalseToCollapsedConverter}}">
+                                    <GroupBox.Header>
+                                        <TextBlock Text="Miscellaneous"
+                                                   Foreground="{StaticResource ForegroundBrush}"
+                                                   FontSize="14"
+                                                   FontWeight="SemiBold" />
+                                    </GroupBox.Header>
+                                    <ItemsControl ItemsSource="{Binding Misc}"
+                                                  ItemTemplate="{StaticResource BulletinPoint}" />
+                                </GroupBox>
                             </Grid>
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-        </controls:FlatScrollViewer>
+        </ScrollViewer>
     </Grid>
 
 </UserControl>

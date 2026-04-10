@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using Metrolib.Controls;
+using System.Windows.Controls;
 
 namespace Tailviewer.Ui.QuickNavigation
 {
@@ -8,7 +8,7 @@ namespace Tailviewer.Ui.QuickNavigation
 	///     which match the entered term.
 	/// </summary>
 	public sealed class QuickNavigationPopup
-		: AutoPopup<SuggestionInputControl>
+		: AutoPopup<TextBox>
 	{
 		static QuickNavigationPopup()
 		{

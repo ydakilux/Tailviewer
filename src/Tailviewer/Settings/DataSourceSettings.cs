@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Xml;
 using log4net;
-using Metrolib;
 using Tailviewer.Api;
 using Tailviewer.Core;
 using Tailviewer.Settings.CustomFormats;
@@ -71,7 +70,7 @@ namespace Tailviewer.Settings
 									break;
 
 								case "folderdatasourcerecursive":
-									FolderDataSourceRecursive = subtree.ReadContentAsBoolean();
+									FolderDataSourceRecursive = subtree.ReadContentAsBool();
 									break;
 
 								case "folderdatasourcepattern":
@@ -79,7 +78,7 @@ namespace Tailviewer.Settings
 									break;
 
 								case "ispinned":
-									IsPinned = subtree.ReadContentAsBoolean();
+									IsPinned = subtree.ReadContentAsBool();
 									break;
 							}
 						}

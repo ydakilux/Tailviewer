@@ -1,52 +1,95 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:controls="clr-namespace:Metrolib.Controls;assembly=Metrolib"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     mc:Ignorable="d">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/Metrolib;component/Themes/Constants.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Tailviewer;component/Themes/Constants.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <Style x:Key="DataSourceTreeViewItemStyle" TargetType="{x:Type controls:FlatTreeViewItem}">
-        <Setter Property="IsExpanded" Value="True" />
+    <!-- Expander toggle button with animated arrow -->
+    <Style x:Key="ExpanderToggleButtonStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Width" Value="20" />
+        <Setter Property="Height" Value="20" />
+        <Setter Property="Margin" Value="2" />
+        <Setter Property="Padding" Value="0" />
         <Setter Property="Background" Value="Transparent" />
-        <!-- We don't want to draw this ugly dotted border around a focused tree view item -->
-        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-        <!-- IsInverted is an inherited, attached dependency property and, as such,
-             travels down the entire visual tree. We use this to ensure that our content
-             renders properly when we are selected (darker background => the foreground of
-             our content should be white-ish). However we don't want this property to travel
-             to our child TreeViewItems, and therefore have to set the property to false, by default
-        -->
-        <Setter Property="controls:Properties.IsInverted" Value="False" />
+        <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type controls:FlatTreeViewItem}">
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Background="Transparent" Width="20" Height="20">
+                        <Path x:Name="Arrow"
+                              Data="M 0 0 L 8 6 L 0 12 Z"
+                              Fill="{TemplateBinding Foreground}"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              RenderTransformOrigin="0.5,0.5">
+                            <Path.RenderTransform>
+                                <RotateTransform x:Name="ArrowRotation" Angle="0" />
+                            </Path.RenderTransform>
+                        </Path>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="ArrowRotation"
+                                                         Storyboard.TargetProperty="Angle"
+                                                         To="90" Duration="0:0:0.15" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="ArrowRotation"
+                                                         Storyboard.TargetProperty="Angle"
+                                                         To="0" Duration="0:0:0.15" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DataSourceTreeViewItemStyle" TargetType="{x:Type TreeViewItem}">
+        <Setter Property="IsExpanded" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+        <!-- Remove ugly dotted focus border -->
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TreeViewItem}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
 
-                        <Border Grid.ColumnSpan="2" Background="{TemplateBinding Background}" />
+                        <Border x:Name="ItemBorder"
+                                Grid.ColumnSpan="2"
+                                Background="{TemplateBinding Background}" />
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
-                            <controls:ExpanderToggleButton x:Name="PART_Expander"
-                                                           IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
-                                                           Foreground="Black"
-                                                           Margin="2"
-                                                           Padding="0"
-                                                           Width="20"
-                                                           Height="20"
-                            />
+                            <ToggleButton x:Name="PART_Expander"
+                                          Style="{StaticResource ExpanderToggleButtonStyle}"
+                                          IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                          Foreground="{TemplateBinding Foreground}" />
 
-                            <ContentPresenter x:Name="PART_Header" ContentSource="Header" Grid.Column="1" />
+                            <ContentPresenter x:Name="PART_Header"
+                                              ContentSource="Header"
+                                              Grid.Column="1" />
                         </Grid>
 
                         <ItemsPresenter x:Name="ItemsHost"
@@ -54,28 +97,27 @@
                     </Grid>
 
                     <ControlTemplate.Triggers>
-                        <Trigger Property="HasItems" Value="false">
+                        <Trigger Property="HasItems" Value="False">
                             <Setter Property="Visibility" TargetName="PART_Expander" Value="Hidden" />
                         </Trigger>
 
-                        <!-- When we're selected -->
-                        <Trigger Property="IsSelected" Value="true">
+                        <!-- Selected and focused -->
+                        <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" Value="{StaticResource BackgroundBrushSelected}" />
-                            <Setter Property="controls:Properties.IsInverted" Value="True" />
+                            <Setter Property="Foreground" Value="{StaticResource ForegroundBrushInverted}" />
                         </Trigger>
-                        
-                        <!-- When we're selected, but NOT focused -->
+
+                        <!-- Selected but not focused -->
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsSelected" Value="True" />
                                 <Condition Property="IsFocused" Value="False" />
-                                <Condition SourceName="PART_Expander" Property="IsFocused" Value="False" />
                             </MultiTrigger.Conditions>
                             <Setter Property="Background" Value="{StaticResource BackgroundBrushSelectedUnfocused}" />
-                            <Setter Property="controls:Properties.IsInverted" Value="False" />
+                            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
                         </MultiTrigger>
-                        
-                        <!-- We want to hide our items in case we're collapsed  -->
+
+                        <!-- Hide items when collapsed -->
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsExpanded" Value="False" />
@@ -84,13 +126,13 @@
                             <Setter Property="Visibility" TargetName="ItemsHost" Value="Collapsed" />
                         </MultiTrigger>
 
+                        <!-- Hover (not selected) -->
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsMouseOver" Value="True" />
                                 <Condition Property="IsSelected" Value="False" />
                             </MultiTrigger.Conditions>
-                            <Setter Property="Background"
-                                    Value="{StaticResource BackgroundBrushHovered}" />
+                            <Setter Property="Background" Value="{StaticResource BackgroundBrushHovered}" />
                         </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

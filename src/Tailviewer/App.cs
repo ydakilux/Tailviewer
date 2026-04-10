@@ -8,7 +8,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using Metrolib;
 using Tailviewer.BusinessLogic.ActionCenter;
 using Tailviewer.BusinessLogic.AutoUpdates;
 using log4net;
@@ -32,16 +31,22 @@ using QuickFilters = Tailviewer.BusinessLogic.Filters.QuickFilters;
 
 namespace Tailviewer
 {
-	public class App
+	public partial class App
 		: Application
 	{
 		private static readonly ILog Log =
 			LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public App()
-		{
-			Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("pack://application:,,,/Metrolib;component/Themes/Generic.xaml") });
-		}
+	public App()
+	{
+		// Enable WPF binding/resource error logging to catch silent XAML failures
+		System.Diagnostics.PresentationTraceSources.Refresh();
+		var listener = new WpfTraceListener();
+		System.Diagnostics.PresentationTraceSources.DataBindingSource.Listeners.Add(listener);
+		System.Diagnostics.PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Error;
+		System.Diagnostics.PresentationTraceSources.ResourceDictionarySource.Listeners.Add(listener);
+		System.Diagnostics.PresentationTraceSources.ResourceDictionarySource.Switch.Level = System.Diagnostics.SourceLevels.Warning;
+	}
 
 		public static int Start(SingleApplicationHelper.IMutex mutex, string[] args, Stopwatch stopwatch)
 		{
@@ -333,6 +338,25 @@ namespace Tailviewer
 
 			MessageBox.Show(string.Format("Oops, something went wrong:\r\n{0}", exception),
 			                Constants.MainWindowTitle);
+		}
+	}
+
+	/// <summary>
+	///     Forwards WPF PresentationTraceSources messages to log4net so binding/resource
+	///     errors appear in Tailviewer.log.
+	/// </summary>
+	internal sealed class WpfTraceListener : System.Diagnostics.TraceListener
+	{
+		private static readonly ILog Log = LogManager.GetLogger(typeof(WpfTraceListener));
+
+		public override void Write(string message)
+		{
+			Log.WarnFormat("[WPF] {0}", message);
+		}
+
+		public override void WriteLine(string message)
+		{
+			Log.WarnFormat("[WPF] {0}", message);
 		}
 	}
 }

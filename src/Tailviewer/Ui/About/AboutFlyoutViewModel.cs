@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Windows.Controls;
 using log4net;
-using Metrolib.Controls;
 using MMQ;
 using Ookii.Dialogs.Wpf;
 using Xceed.Wpf.Toolkit;
@@ -23,7 +23,7 @@ namespace Tailviewer.Ui.About
 			_dependencies = new List<Dependency>
 			{
 				Dependency.CreateFrom<ILog>("https://logging.apache.org/log4net/", "Licenses/Log4Net/LICENSE-2.0.txt"),
-				Dependency.CreateFrom<FlatListView>("https://github.com/Kittyfisto/Metrolib", "Licenses/Metrolib/License.txt"),
+				Dependency.CreateFrom<ScrollViewer>("https://github.com/Kittyfisto/Metrolib", "Licenses/Metrolib/License.txt"),
 				Dependency.CreateFrom<IMemoryMappedQueue>("https://github.com/Kittyfisto/MMQ", "Licenses/MMQ/LICENSE"),
 				Dependency.CreateFrom<ITask>("https://github.com/Kittyfisto/System.Threading.Extensions", "Licenses/System.Threading.Extensions/LICENSE"),
 				new Dependency("Inconsolata", new Version(1, 16), "https://fonts.google.com/specimen/Inconsolata",

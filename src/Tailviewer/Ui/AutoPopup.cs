@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using log4net;
-using Metrolib;
 using Tailviewer.Ui.LogView;
 
 namespace Tailviewer.Ui
@@ -25,7 +24,7 @@ namespace Tailviewer.Ui
 
 		protected AutoPopup()
 		{
-			InputBindings.Add(new KeyBinding(new DelegateCommand2(OnEscape), new KeyGesture(Key.Escape)));
+			InputBindings.Add(new KeyBinding(new DelegateCommand(OnEscape), new KeyGesture(Key.Escape)));
 
 			Loaded += OnLoaded;
 			Opened += OnOpened;

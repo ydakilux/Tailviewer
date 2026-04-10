@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows.Media;
-using Metrolib;
 using Tailviewer.BusinessLogic.Highlighters;
 
 namespace Tailviewer.Ui.SidePanel.Highlighters
@@ -14,7 +13,7 @@ namespace Tailviewer.Ui.SidePanel.Highlighters
 	public sealed class HighlightersSidePanelViewModel
 		: AbstractSidePanelViewModel
 	{
-		private readonly DelegateCommand2 _addCommand;
+		private readonly DelegateCommand _addCommand;
 		private readonly IHighlighters _highlighters;
 		private readonly ObservableCollection<HighlighterViewModel> _highlighterViewModels;
 
@@ -27,7 +26,7 @@ namespace Tailviewer.Ui.SidePanel.Highlighters
 				AddHighlighterViewModel(highlighter);
 			}
 
-			_addCommand = new DelegateCommand2(Add);
+			_addCommand = new DelegateCommand(Add);
 		}
 
 		public IEnumerable<HighlighterViewModel> Highlighters

@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Windows.Input;
-using Metrolib;
 using Tailviewer.Api;
 using Tailviewer.BusinessLogic.ActionCenter;
 

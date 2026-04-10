@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Media;
-using Metrolib;
 using Tailviewer.Ui.DataSourceTree;
 
 namespace Tailviewer.Ui.Menu
@@ -12,14 +11,14 @@ namespace Tailviewer.Ui.Menu
 		: IMenuViewModel
 		, INotifyPropertyChanged
 	{
-		private readonly DelegateCommand2 _command;
+		private readonly DelegateCommand _command;
 		private readonly ISingleDataSourceViewModel _dataSource;
 		private string _header;
 
 		public ToggleExcludeFromGroupViewModel(ISingleDataSourceViewModel dataSource)
 		{
 			_dataSource = dataSource;
-			_command = new DelegateCommand2(ToggleFilterAll);
+			_command = new DelegateCommand(ToggleFilterAll);
 			UpdateHeader();
 		}
 

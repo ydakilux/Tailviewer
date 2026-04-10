@@ -1,17 +1,15 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:converters="clr-namespace:Tailviewer.Ui.Converters"
-                    xmlns:converters2="clr-namespace:Metrolib.Converters;assembly=Metrolib"
-                    xmlns:controls="clr-namespace:Metrolib.Controls;assembly=Metrolib"
                     xmlns:dataSourceTree="clr-namespace:Tailviewer.Ui.DataSourceTree"
                     xmlns:ui="clr-namespace:Tailviewer.Ui">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Tailviewer;component/Themes/Constants.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Tailviewer;component/Themes/Converters.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Tailviewer;component/Ui/Menu/MenuItemTemplates.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <converters2:BoolFalseToHiddenConverter x:Key="BoolFalseToHiddenConverter" />
     <converters:ZeroToHiddenConverter x:Key="ZeroToHiddenConverter" />
     <converters:SkippedDueToTimestampConverter x:Key="SkippedDueToTimestampConverter" />
     <converters:CountConverter x:Key="NoTimestampCountConverter" />
@@ -38,8 +36,7 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <controls:EditableTextBlock Text="{Binding DisplayName, Mode=TwoWay}"
-                                            Watermark="Enter display name" />
+                <TextBox Text="{Binding DisplayName, Mode=TwoWay}" />
 
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
@@ -63,13 +60,16 @@
                 </Grid>
             </Grid>
 
-            <controls:CloseButton x:Name="PART_RemoveDataSource"
-                                  VerticalAlignment="Stretch"
-                                  HorizontalAlignment="Right"
-                                  Command="{Binding RemoveCommand}"
-                                  ToolTip="Remove this merged data source"
-                                  Grid.Column="1"
-                                  HorizontalContentAlignment="Right" />
+            <Button x:Name="PART_RemoveDataSource"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Right"
+                    Command="{Binding RemoveCommand}"
+                    ToolTip="Remove this merged data source"
+                    Grid.Column="1"
+                    HorizontalContentAlignment="Right"
+                    Width="20" Height="20" Padding="0" BorderThickness="0" Background="Transparent">
+                <TextBlock Text="✕" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Button>
 
         </Grid>
     </HierarchicalDataTemplate>

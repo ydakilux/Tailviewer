@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:controls="clr-namespace:Metrolib.Controls;assembly=Metrolib"
              xmlns:tailviewer="clr-namespace:Tailviewer"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:settings="clr-namespace:Tailviewer.Ui.Settings"
@@ -16,7 +15,6 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Metrolib;component/Themes/Constants.xaml" />
                 <ResourceDictionary Source="CustomFormats/CustomFormatsSettingsDataTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <DataTemplate x:Key="HeaderDataTemplate">
@@ -25,8 +23,8 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <controls:FlatScrollViewer VerticalScrollBarVisibility="Auto"
-                               HorizontalScrollBarVisibility="Disabled">
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
@@ -41,22 +39,29 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 
-                <controls:FlatGroupBox Header="Export" VerticalAlignment="Top" Margin="8"
-                                       HeaderTemplate="{StaticResource HeaderDataTemplate}">
+                <GroupBox Header="Export" VerticalAlignment="Top" Margin="8">
+                    <GroupBox.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock FontSize="22" Text="{Binding}" />
+                        </DataTemplate>
+                    </GroupBox.HeaderTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="170" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Export folder" Margin="0,6,6,6"/>
-                        <controls:PathChooserTextBox Text="{Binding ExportFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                     PathChooserCommand="{Binding ChooseExportFolderCommand}"
-                                                     Grid.Column="1"/>
+                        <TextBox Text="{Binding ExportFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Grid.Column="1"/>
                     </Grid>
-                </controls:FlatGroupBox>
+                </GroupBox>
 
-                <controls:FlatGroupBox Grid.Row="1" Header="Log Viewer" VerticalAlignment="Top" Margin="8"
-                                       HeaderTemplate="{StaticResource HeaderDataTemplate}">
+                <GroupBox Grid.Row="1" Header="Log Viewer" VerticalAlignment="Top" Margin="8">
+                    <GroupBox.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock FontSize="22" Text="{Binding}" />
+                        </DataTemplate>
+                    </GroupBox.HeaderTemplate>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -72,9 +77,9 @@
                                    VerticalAlignment="Center"
                                    Margin="0,6,6,6"
                                    Grid.Row="0" />
-                        <controls:EditorTextBox Grid.Column="1" Grid.Row="0"
-                                                Margin="0,6,6,6">
-                            <controls:EditorTextBox.Text>
+                        <TextBox Grid.Column="1" Grid.Row="0"
+                                 Margin="0,6,6,6">
+                            <TextBox.Text>
                                 <Binding Path="ScrollSpeed"
                                          Mode="TwoWay"
                                          UpdateSourceTrigger="PropertyChanged">
@@ -82,17 +87,17 @@
                                         <tailviewer:Int32RangeRule Minimum="1" Maximum="100" />
                                     </Binding.ValidationRules>
                                 </Binding>
-                            </controls:EditorTextBox.Text>
-                        </controls:EditorTextBox>
+                            </TextBox.Text>
+                        </TextBox>
 
                         <TextBlock Text="Font Size"
                                    VerticalAlignment="Center"
                                    Margin="0,6,6,6"
                                    Grid.Row="1"
                                    Grid.Column="0"/>
-                        <controls:EditorTextBox Grid.Column="1" Grid.Row="1"
-                                                Margin="0,6,6,6">
-                            <controls:EditorTextBox.Text>
+                        <TextBox Grid.Column="1" Grid.Row="1"
+                                 Margin="0,6,6,6">
+                            <TextBox.Text>
                                 <Binding Path="FontSize"
                                          Mode="TwoWay"
                                          UpdateSourceTrigger="PropertyChanged">
@@ -100,17 +105,17 @@
                                         <tailviewer:Int32RangeRule Minimum="1" Maximum="100" />
                                     </Binding.ValidationRules>
                                 </Binding>
-                            </controls:EditorTextBox.Text>
-                        </controls:EditorTextBox>
+                            </TextBox.Text>
+                        </TextBox>
 
                         <TextBlock Text="Tab Width"
                                    VerticalAlignment="Center"
                                    Margin="0,6,6,6"
                                    Grid.Row="2"
                                    Grid.Column="0"/>
-                        <controls:EditorTextBox Grid.Column="1" Grid.Row="2"
-                                                Margin="0,6,6,6">
-                            <controls:EditorTextBox.Text>
+                        <TextBox Grid.Column="1" Grid.Row="2"
+                                 Margin="0,6,6,6">
+                            <TextBox.Text>
                                 <Binding Path="TabWidth"
                                          Mode="TwoWay"
                                          UpdateSourceTrigger="PropertyChanged">
@@ -118,13 +123,17 @@
                                         <tailviewer:Int32RangeRule Minimum="1" Maximum="100" />
                                     </Binding.ValidationRules>
                                 </Binding>
-                            </controls:EditorTextBox.Text>
-                        </controls:EditorTextBox>
+                            </TextBox.Text>
+                        </TextBox>
                     </Grid>
-                </controls:FlatGroupBox>
+                </GroupBox>
 
-                <controls:FlatGroupBox Grid.Row="2" Header="Log Levels" VerticalAlignment="Top" Margin="8"
-                                       HeaderTemplate="{StaticResource HeaderDataTemplate}">
+                <GroupBox Grid.Row="2" Header="Log Levels" VerticalAlignment="Top" Margin="8">
+                    <GroupBox.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock FontSize="22" Text="{Binding}" />
+                        </DataTemplate>
+                    </GroupBox.HeaderTemplate>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -293,7 +302,7 @@
                                               Grid.Column="1" />
                         </Grid>
                     </Grid>
-                </controls:FlatGroupBox>
+                </GroupBox>
             </Grid>
 
             <Grid Grid.Column="1">
@@ -305,8 +314,12 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <controls:FlatGroupBox Header="Data Sources" VerticalAlignment="Top" Margin="8"
-                                       HeaderTemplate="{StaticResource HeaderDataTemplate}">
+                <GroupBox Header="Data Sources" VerticalAlignment="Top" Margin="8">
+                    <GroupBox.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock FontSize="22" Text="{Binding}" />
+                        </DataTemplate>
+                    </GroupBox.HeaderTemplate>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -335,9 +348,8 @@
                                    Margin="0,6,6,6"
                                    Grid.Row="1"
                                    Grid.Column="0"/>
-                        <controls:EditorTextBox Grid.Column="1" Grid.Row="1"
-                                                Text="{Binding FolderDataSourcePatterns, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                />
+                        <TextBox Grid.Column="1" Grid.Row="1"
+                                 Text="{Binding FolderDataSourcePatterns, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <TextBlock Grid.Column="1"
                                    Grid.Row="2"
                                    Foreground="#6B6B6B"
@@ -372,30 +384,38 @@
                         </TextBlock>
 
                     </Grid>
-                </controls:FlatGroupBox>
+                </GroupBox>
 
-                <controls:FlatGroupBox Header="Custom Log file Formats"
-                                       HeaderTemplate="{StaticResource HeaderDataTemplate}"
-                                       Grid.Row="1"
-                                       VerticalAlignment="Top" Margin="8">
-                    <ContentPresenter Content="{Binding CustomFormats}" />
-                </controls:FlatGroupBox>
-
-                <controls:FlatGroupBox Grid.Row="2"
-                                       Header="Window" VerticalAlignment="Top" Margin="8"
-                                       HeaderTemplate="{StaticResource HeaderDataTemplate}">
-                    <Grid>
-                        <CheckBox Content="Always on top" IsChecked="{Binding AlwaysOnTop, Mode=TwoWay}" />
-                    </Grid>
-                </controls:FlatGroupBox>
-
-                <controls:FlatGroupBox Header="Updates" VerticalAlignment="Top" Margin="8"
-                                       Grid.Row="3">
-                    <controls:FlatGroupBox.HeaderTemplate>
+                <GroupBox Header="Custom Log file Formats"
+                          Grid.Row="1"
+                          VerticalAlignment="Top" Margin="8">
+                    <GroupBox.HeaderTemplate>
                         <DataTemplate>
                             <TextBlock FontSize="22" Text="{Binding}" />
                         </DataTemplate>
-                    </controls:FlatGroupBox.HeaderTemplate>
+                    </GroupBox.HeaderTemplate>
+                    <ContentPresenter Content="{Binding CustomFormats}" />
+                </GroupBox>
+
+                <GroupBox Grid.Row="2"
+                          Header="Window" VerticalAlignment="Top" Margin="8">
+                    <GroupBox.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock FontSize="22" Text="{Binding}" />
+                        </DataTemplate>
+                    </GroupBox.HeaderTemplate>
+                    <Grid>
+                        <CheckBox Content="Always on top" IsChecked="{Binding AlwaysOnTop, Mode=TwoWay}" />
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Header="Updates" VerticalAlignment="Top" Margin="8"
+                          Grid.Row="3">
+                    <GroupBox.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock FontSize="22" Text="{Binding}" />
+                        </DataTemplate>
+                    </GroupBox.HeaderTemplate>
                     <StackPanel>
                         <Grid>
                             <Grid.RowDefinitions>
@@ -407,21 +427,20 @@
                             </Grid.RowDefinitions>
                             <CheckBox x:Name="PART_CheckForUpdates" IsChecked="{Binding CheckForUpdates, Mode=TwoWay}"
                                       Content="Notify me when an update becomes available" Margin="0,4,4,4" />
-                            <!--<CheckBox Grid.Row="1" IsChecked="{Binding AutomaticallyInstallUpdates, Mode=TwoWay}" Content="Automatically install the newest versions" IsEnabled="{Binding IsChecked,ElementName=PART_CheckForUpdates}"></CheckBox>-->
                             <TextBlock Grid.Row="2" TextWrapping="Wrap" Margin="0,4,0,0"
                                        Text="If you're behind a proxy server, then you might need to fill out these fields in order to be automatically notified when an update becomes available." />
                             <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,4,0,4">
-                                <controls:EditorTextBox Watermark="Proxy username" Width="110"
-                                                           Text="{Binding ProxyUsername}" Margin="0,0,4,0"
-                                                           IsEnabled="{Binding IsChecked, ElementName=PART_CheckForUpdates}" />
-                                <controls:FlatPasswordBox Watermark="Proxy password" Width="110"
-                                                          x:Name="PART_ProxyPassword"
-                                                          PasswordChanged="OnPasswordChanged"
-                                                          Margin="0,0,4,0"
-                                                          IsEnabled="{Binding IsChecked, ElementName=PART_CheckForUpdates}" />
-                                <controls:EditorTextBox Watermark="Proxy server" Width="150"
-                                                           Text="{Binding ProxyServer}" Margin="0"
-                                                           IsEnabled="{Binding IsChecked, ElementName=PART_CheckForUpdates}" />
+                                <TextBox Width="110"
+                                         Text="{Binding ProxyUsername}" Margin="0,0,4,0"
+                                         IsEnabled="{Binding IsChecked, ElementName=PART_CheckForUpdates}" />
+                                <PasswordBox x:Name="PART_ProxyPassword"
+                                             Width="110"
+                                             PasswordChanged="OnPasswordChanged"
+                                             Margin="0,0,4,0"
+                                             IsEnabled="{Binding IsChecked, ElementName=PART_CheckForUpdates}" />
+                                <TextBox Width="150"
+                                         Text="{Binding ProxyServer}" Margin="0"
+                                         IsEnabled="{Binding IsChecked, ElementName=PART_CheckForUpdates}" />
                             </StackPanel>
                             
                         </Grid>
@@ -434,14 +453,14 @@
                             <TextBlock Margin="4"
                                        Text="Third party plugins will be automatically updated from the following repositories:"/>
 
-                            <controls:EditorTextBox Grid.Row="1" Text="{Binding PluginRepositories}"
-                                                    TextWrapping="Wrap"
-                                                    AcceptsReturn="True" />
+                            <TextBox Grid.Row="1" Text="{Binding PluginRepositories}"
+                                     TextWrapping="Wrap"
+                                     AcceptsReturn="True" />
                         </Grid>
                     </StackPanel>
-                </controls:FlatGroupBox>
+                </GroupBox>
 
             </Grid>
         </Grid>
-    </controls:FlatScrollViewer>
+    </ScrollViewer>
 </UserControl>
